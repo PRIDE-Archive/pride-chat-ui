@@ -1,0 +1,252 @@
+#app {
+  overflow-x: hidden;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  width: 100%;
+}
+
+.navBar {
+  padding: 0 1.25rem;
+  color: black;
+  text-decoration: none;
+}
+
+.navBar:hover {
+  color: rgb(37, 99, 235);
+}
+
+@media (min-width: 640px) {
+  .container {
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1280px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1536px;
+  }
+}
+
+.header {
+  width: 100%;
+  height: 40px;
+  border-color: rgb(243 244 246);
+  background-image: linear-gradient(
+    to top,
+    rgb(249, 250, 251),
+    rgb(255, 255, 255)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0%;
+  overflow-y: auto;
+}
+
+.chat {
+  position: relative;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: rgb(55, 65, 81);
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  padding-top: 30px;
+}
+
+.chat-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 4px 8px;
+  border: 1px solid #e5e7eb;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0;
+  border-bottom-right-radius: 7px;
+  z-index: 20px;
+}
+
+.chat-share {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  padding: 0 4px;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+}
+
+.chat-contents {
+  overflow-y: auto;
+}
+.chat-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.chat-prompt {
+  padding: 6px 12px;
+  margin: 8px;
+  background-color: #fff7ed;
+  border: 1px solid rgb(253, 186, 116);
+  border-radius: 8px;
+  overflow-wrap: break-word;
+  unicode-bidi: isolate;
+}
+
+.chat-complate {
+  padding: 6px 12px;
+  margin: 8px 8px 0 8px;
+  background-color: #f9fafb;
+  border: 1px solid rgb(253, 186, 116);
+  border-radius: 8px;
+  overflow-wrap: break-word;
+  unicode-bidi: isolate;
+}
+
+.chat-relevant {
+  margin-bottom: 8px;
+  margin-left: 16px;
+  text-align: left;
+  cursor: pointer;
+}
+.chat-submit {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+}
+
+.submit-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 110px;
+  height: 40px;
+  font-size: 16px;
+  font-stretch: 100%;
+  font-weight: 600;
+  color: #ea580c;
+  background: linear-gradient(to bottom right, #ffedd5, #fdba74);
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+}
+
+.submit-btn:hover {
+  border-color: #fed7aa;
+  background: linear-gradient(to bottom right, #ffedd5, #fed7aa);
+  color: #ea580c;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+.submit-btn-loading {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 110px;
+  height: 40px;
+  font-size: 16px;
+  font-stretch: 100%;
+  font-weight: 600;
+  color: #be8d72;
+  background: linear-gradient(to bottom right, #ffedd5, #fdba74);
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+}
+
+.opterates {
+  margin-top: 10px;
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+  width: 100%;
+  row-gap: 16px;
+  column-gap: 16px;
+}
+
+.opt-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  color: #424a57;
+  background: linear-gradient(to bottom right, #f3f4f6, #e5e7eb);
+}
+.options {
+  margin-top: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+.options-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.options-content {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10 12px;
+  margin: 10px;
+}
+
+.options-compent {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10 12px;
+  margin: 10px;
+}
+
+.options-fields {
+  border-top: 1px solid #e5e7eb;
+  padding: 10px 12px;
+}
+
+.option-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
