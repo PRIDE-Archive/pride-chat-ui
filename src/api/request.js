@@ -1,7 +1,7 @@
 import axios from "axios";
 import qs from "qs";
 
-export const baseURL = "http://region-9.seetacloud.com:20324";
+export const baseURL = "https://www.ebi.ac.uk/pride/ws/archive/v2";
 
 const server = axios.create({
   baseURL: baseURL,
