@@ -17,3 +17,4 @@ COPY --from=build-stage /app/dist/ /usr/share/
 # Copy the default nginx.conf provided by tiangolo/node-frontend
 COPY --from=build-stage /app/nginx.conf /etc/nginx/nginx.conf
 RUN apt-get update && apt-get install -y curl && apt-get install -y iputils-ping
+
