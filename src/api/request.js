@@ -14,7 +14,7 @@ export const get = (url, params) => {
 };
 
 export const post = (url, data) => {
-  return server.post(url, JSON.stringify(data), {
-    headers: { "Content-Type": "application/json" },
+  return server.post(url, data, {
+    headers: { "Content-Type": "text/plain", Accept: "text/plain" },
   });
 };
