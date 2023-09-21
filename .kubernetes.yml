@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: pride-web
+  name: pride-chatbot
   labels:
-    app: pride-web
+    app: pride-chatbot
 spec:
   replicas: $k8s_replicas
   revisionHistoryLimit: 1
   selector:
     matchLabels:
-      app: pride-web
+      app: pride-chatbot
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -18,12 +18,12 @@ spec:
   template:
     metadata:
       labels:
-        app: pride-web
+        app: pride-chatbot
     spec:
       imagePullSecrets:
         - name: $DOCKER_PULL_SECRET
       containers:
-        - name: pride-web
+        - name: pride-chatbot
           image: $IMAGE
           ports:
             - containerPort: 8080
@@ -43,10 +43,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: pride-web-service
+  name: pride-chatbot-service
 spec:
   selector:
-    app: pride-web
+    app: pride-chatbot
   ports:
     - protocol: TCP
       port: 8080
