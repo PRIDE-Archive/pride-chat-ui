@@ -19,7 +19,7 @@ export const modelChoiceTest = (model) => {
 };
 
 export const chat = (prompt, modelName) => {
-  return post("/chat", { prompt: prompt, model_name: modelName });
+  return post("/chat", { Chat: { prompt: prompt, model_name: modelName } });
 };
 
 export const chatTest = (prompt) => {
