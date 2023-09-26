@@ -8,6 +8,7 @@
             <Radio
               :label="item"
               :value="item"
+              :disabled="item === 'GPT4ALL'"
               border
               v-for="item in models"
               :key="item"
