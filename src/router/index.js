@@ -15,9 +15,14 @@ const routes = [
     component: () => import("../views/Chat.vue"),
   },
   {
+    path: "/benchmark",
+    name: "benchmark",
+    component: () => import("../views/Benchmark.vue"),
+  },
+  {
     path: "/resource",
     name: "resource",
-    component: () => import("../views/Resource.vue"),
+    component: () => import("../views/Database.vue"),
   },
   {
     path: "/relevant",

@@ -9,6 +9,7 @@
       /></router-link>
       <div>
         <router-link class="navBar" to="/">Home</router-link>
+        <router-link class="navBar" to="/benchmark">Benchmark</router-link>
         <router-link class="navBar" to="/resource">Database</router-link>
       </div>
     </header>
