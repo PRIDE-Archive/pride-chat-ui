@@ -242,10 +242,11 @@ export default {
 
       } catch (e) {
         console.error(e);
-        if(!e.response){
-          this.$Message.warning("response is empty");
-        } else{
-          this.$Message.warning(e.message + " " + e.code);
+        if (!e.response) {
+          this.$Message.error({ content: "response is empty", duration: 20, closable: true });
+        } else {
+          this.$Message.error(e.message + " " + e.code);
+          this.$Message.error({ content: e.message + " " + e.code, duration: 20, closable: true });
         }
       }
 
@@ -282,7 +283,7 @@ export default {
       this.record.winner = win;
       this.record.turn = this.listA.length;
       this.record.tstamp = this.getCurrentData();
-      
+
       console.log(JSON.stringify(this.record));
       let voteData = JSON.parse(localStorage.getItem('voteData')) || [];
       voteData.push(this.record);
