@@ -8,9 +8,9 @@
             <Radio
               :label="item"
               :value="item"
-              :disabled="item === 'GPT4ALL'"
+              :disabled="index > 1"
               border
-              v-for="item in models"
+              v-for="(item,index) in models"
               :key="item"
             ></Radio>
           </RadioGroup>
@@ -93,8 +93,8 @@ export default {
       model: "llama2-chat",
       models: [
         "llama2-chat",
-        "GPT4ALL",
         "chatglm2-6b",
+        "GPT4ALL",
         "mpt-7b",
         "baichuan-7b",
         "vicuna-13b",

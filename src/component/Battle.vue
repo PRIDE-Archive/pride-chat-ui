@@ -131,9 +131,9 @@ export default {
       models: [
         "llama2-chat",
         "chatglm2-6b",
-        "mpt-7b",
-        "baichuan-7b",
-        "vicuna-13b",
+        // "mpt-7b",
+        // "baichuan-7b",
+        // "vicuna-13b",
       ],
       status: 0, // 0 normal, 1 waiting, 2 voting, 3 showing 
       record: {
@@ -238,7 +238,11 @@ export default {
 
       } catch (e) {
         console.error(e);
-        this.$Message.warning(e.message + " " + e.code);
+        if(!e.response){
+          this.$Message.warning("response is empty");
+        } else{
+          this.$Message.warning(e.message + " " + e.code);
+        }
       }
 
       this.prePrompt = this.prompt;
