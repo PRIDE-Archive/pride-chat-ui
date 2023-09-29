@@ -224,15 +224,14 @@ export default {
       try {
 
         let resA = await chat(this.prompt, this.record.model_a);
+        let resB = await chat(this.prompt, this.record.model_b);
+
         this.listA.push(
           Object.assign(resA.data, {
             prompt: this.prompt,
             relevant: resA.data["relevant-chunk"],
           })
         );
-        // console.log(this.listA);
-
-        let resB = await chat(this.prompt, this.record.model_b);
         this.listB.push(
           Object.assign(resB.data, {
             prompt: this.prompt,
@@ -243,7 +242,7 @@ export default {
 
       } catch (e) {
         console.error(e);
-        this.$Message.warning("chat failed");
+        this.$Message.warning(e.message + " " + e.code);
       }
 
       this.prePrompt = this.prompt;
