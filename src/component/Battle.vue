@@ -257,7 +257,7 @@ export default {
     onRelevant: function (relevant) {
       console.log(relevant);
       localStorage.setItem("markdown", JSON.stringify(relevant));
-      window.open("/relevant");
+      window.open("relevant");
     },
     getCurrentData() {
       let date = new Date();
