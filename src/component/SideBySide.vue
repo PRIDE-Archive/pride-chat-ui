@@ -132,6 +132,7 @@ export default {
       listB: [],
       models: [
         "llama2-chat",
+        "llama2-13b-chat",
         "chatglm2-6b",
         // "mpt-7b",
         // "baichuan-7b",

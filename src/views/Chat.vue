@@ -93,6 +93,7 @@ export default {
       model: "llama2-chat",
       models: [
         "llama2-chat",
+        "llama2-13b-chat",
         "chatglm2-6b",
         "GPT4ALL",
         "mpt-7b",
