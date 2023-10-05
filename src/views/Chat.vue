@@ -8,7 +8,7 @@
             <Radio
               :label="item"
               :value="item"
-              :disabled="index > 1"
+              :disabled="index > 2"
               border
               v-for="(item,index) in models"
               :key="item"
