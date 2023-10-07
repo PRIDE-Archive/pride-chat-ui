@@ -8,7 +8,7 @@
             <Radio
               :label="item"
               :value="item"
-              :disabled="index > 2"
+              :disabled="item != 'llama2-13b-chat' && item != 'chatglm2-6b'"
               border
               v-for="(item,index) in models"
               :key="item"

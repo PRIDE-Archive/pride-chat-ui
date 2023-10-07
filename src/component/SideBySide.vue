@@ -54,7 +54,7 @@
             </div>
           </div>
         </div>
-        <div class="votes" v-if="listA.length > 0 && !record.winner">
+        <div class="votes" v-if="listA.length > 0 && listA.length > votePosition">
           <button class="vote-btn" @click="onVote(record.model_a)">
             👈 A is better
           </button>
@@ -97,7 +97,7 @@
               placeholder="Type a message..." />
           </div>
 
-          <div v-if="record.winner" class="submit-btn-loading">Submit</div>
+          <div v-if="isLoading" class="submit-btn-loading">Submit</div>
           <div v-else class="submit-btn" @click="onSubmit('form')">Submit</div>
         </div>
 
@@ -131,14 +131,15 @@ export default {
       listA: [],
       listB: [],
       models: [
-        "llama2-chat",
+        // "llama2-chat",
         "llama2-13b-chat",
         "chatglm2-6b",
         // "mpt-7b",
         // "baichuan-7b",
         // "vicuna-13b",
       ],
-      status: 0, // 0 normal, 1 waiting, 2 voting, 3 showing 
+      isLoading: 0, 
+      votePosition: 0,
       record: {
         "model_a": "",
         "model_b": "",
@@ -147,7 +148,12 @@ export default {
         "turn": 1,
         "anony": false,
         "language": "English",
-        "tstamp": 1681813816.2522
+        "tstamp": 1681813816.2522,
+        "question": "",
+        "model_a_answer": "",
+        "model_b_answer": "",
+        "model_a_timing": "",
+        "model_b_timing": ""
       },
       rule: {
         judge: [
@@ -166,7 +172,7 @@ export default {
       let shuffled = this.models.sort(() => 0.5 - Math.random());
       this.record.model_a = shuffled[0];
       this.record.model_b = shuffled[1];
-      this.status = 0;
+
       this.record.winner = "";
       this.record.judge = "";
       this.turn = 0;
@@ -240,6 +246,11 @@ export default {
           })
         );
         // console.log(this.listB);
+        this.record.question = this.prompt;
+        this.record.model_a_answer = resA.data.result;
+        this.record.model_b_answer = resB.data.result;
+        this.record.model_a_timing = resA.data.timems;
+        this.record.model_b_timing = resB.data.timems;
 
       } catch (e) {
         console.error(e);
@@ -284,7 +295,7 @@ export default {
       this.record.winner = win;
       this.record.turn = this.listA.length;
       this.record.tstamp = this.getCurrentData();
-
+      this.votePosition = this.listA.length;
       console.log(JSON.stringify(this.record));
       let voteData = JSON.parse(localStorage.getItem('voteData')) || [];
       voteData.push(this.record);
