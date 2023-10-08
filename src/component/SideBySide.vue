@@ -2,7 +2,7 @@
   <div>
     <div class="container" style="min-height: 100vh; padding-top: 8px">
       <div style="text-align: left; ">
-        <Form ref="form" :model="record" :rules="rule" :label-width="80" inline>
+        <Form ref="form" :model="record" :rules="rule" label-position="left" :label-width="80" inline>
           <FormItem label="Judge" prop="judge">
             <Input v-model="record.judge" :clearable="false" placeholder="input your name" />
           </FormItem>
@@ -68,7 +68,7 @@
             👎 Both are bad
           </button>
         </div>
-        <div class="votes" style="opacity: 0.5" v-if="listA.length > 0 && record.winner">
+        <div class="votes" style="opacity: 0.5" v-else-if="listA.length > 0 && record.winner">
           <button class="vote-btn">
             👈 A is better
           </button>
@@ -138,7 +138,7 @@ export default {
         // "baichuan-7b",
         // "vicuna-13b",
       ],
-      isLoading: 0, 
+      isLoading: 0,
       votePosition: 0,
       record: {
         "model_a": "",
@@ -206,25 +206,7 @@ export default {
       this.listB = [];
       this.generateModel();
     },
-    onSubmit: async function (name) {
-      this.$refs[name].validate((valid) => {
-        if (!valid) {
-          // this.$Message.error('Fail!');
-          return;
-        }
-      })
-
-      if (!this.prompt) {
-        return;
-      }
-      if (!this.record.model_a) {
-        this.$Message.warning("please choice model");
-        return;
-      }
-      if (!this.record.model_b) {
-        this.$Message.warning("please choice model");
-        return;
-      }
+    doSubmit: async function () {
 
       this.$Spin.show();
 
@@ -268,6 +250,26 @@ export default {
       // console.log(JSON.stringify(this.record));
 
       this.$Spin.hide();
+    },
+    onSubmit: async function (name) {
+      this.$refs[name].validate((valid) => {
+        if (!valid) {
+          // this.$Message.error('Fail!');
+          return;
+        }
+        if (!this.prompt) {
+          return;
+        }
+        if (!this.record.model_a) {
+          this.$Message.warning("please choice model");
+          return;
+        }
+        if (!this.record.model_b) {
+          this.$Message.warning("please choice model");
+          return;
+        }
+        this.doSubmit();
+      })
 
     },
     onRelevant: function (relevant) {
