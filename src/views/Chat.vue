@@ -8,7 +8,6 @@
             <Radio
               :label="item"
               :value="item"
-              :disabled="item != 'llama2-13b-chat' && item != 'chatglm2-6b'"
               border
               v-for="(item,index) in models"
               :key="item"
@@ -90,15 +89,15 @@ export default {
       prompt: "",
       prePrompt: "",
       list: [],
-      model: "llama2-chat",
+      model: "llama2-13b-chat",
       models: [
-        "llama2-chat",
+        // "llama2-chat",
         "llama2-13b-chat",
         "chatglm2-6b",
-        "GPT4ALL",
-        "mpt-7b",
-        "baichuan-7b",
-        "vicuna-13b",
+        // "GPT4ALL",
+        // "mpt-7b",
+        // "baichuan-7b",
+        // "vicuna-13b",
       ],
       isLoading: false,
       showOption: true,
