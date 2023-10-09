@@ -1,88 +1,88 @@
 <template>
   <div>
     <div class="container" style="min-height: 100vh; padding-top: 8px">
-      <div style="text-align: left; ">
-        <Form ref="form" :model="record" :rules="rule" label-position="left" :label-width="80" inline>
+        <div style="text-align: left; ">
+          <Form ref="form" :model="record" :rules="rule" label-position="left" :label-width="80" inline>
           <FormItem label="Judge" prop="judge">
             <Input v-model="record.judge" :clearable="false" placeholder="input your name" />
           </FormItem>
-        </Form>
-      </div>
-      <main class="content">
-        <div class="chats">
-          <div class="chat">
-            <div class="chat-label">
-              <Icon type="ios-chatboxes-outline" /> Model A
-            </div>
-            <div class="chat-contents">
-              <div class="chat-content" v-for="(item, index) in listA" :key="index">
-                <div class="chat-prompt">{{ item.prompt }}</div>
-                <div class="chat-complate">
-                  {{ item.result }}
-                  <div style="text-align: right" v-if="item.relevant">
-                    <a @click="onRelevant(item.relevant)" type="primary" ghost>relevant</a>
+          </Form>
+        </div>
+        <main class="content">
+          <div class="chats">
+            <div class="chat">
+              <div class="chat-label">
+                <Icon type="ios-chatboxes-outline" /> Model A
+              </div>
+              <div class="chat-contents">
+                <div class="chat-content" v-for="(item, index) in listA" :key="index">
+                  <div class="chat-prompt">{{ item.prompt }}</div>
+                  <div class="chat-complate">
+                    {{ item.result }}
+                    <div style="text-align: right" v-if="item.relevant">
+                      <a @click="onRelevant(item.relevant)" type="primary" ghost>relevant</a>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="chat">
-            <div class="chat-label">
-              <Icon type="ios-chatboxes-outline" /> Model B
-            </div>
-            <div class="chat-contents">
-              <div class="chat-content" v-for="(item, index) in listB" :key="index">
-                <div class="chat-prompt">{{ item.prompt }}</div>
-                <div class="chat-complate">
-                  {{ item.result }}
-                  <div style="text-align: right" v-if="item.relevant">
-                    <a @click="onRelevant(item.relevant)" type="primary" ghost>relevant</a>
+            <div class="chat">
+              <div class="chat-label">
+                <Icon type="ios-chatboxes-outline" /> Model B
+              </div>
+              <div class="chat-contents">
+                <div class="chat-content" v-for="(item, index) in listB" :key="index">
+                  <div class="chat-prompt">{{ item.prompt }}</div>
+                  <div class="chat-complate">
+                    {{ item.result }}
+                    <div style="text-align: right" v-if="item.relevant">
+                      <a @click="onRelevant(item.relevant)" type="primary" ghost>relevant</a>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
+          </div>
+          <div style="display: flex;" v-if="record.winner">
+            <div style="flex-grow: 1;flex:1;text-align:left;font-weight: bold;font-size:16px;">
+              ModelA:{{ record.model_a }}
+            </div>
+            <div style="flex-grow: 1;flex:1;text-align:left;font-weight: bold;font-size:16px;">
+              ModelB:{{ record.model_b }}
+            </div>
+          </div>
+          <div class="votes" v-if="listA.length > 0 && listA.length > votePosition">
+            <button class="vote-btn" @click="onVote(record.model_a)">
+              👈 A is better
+            </button>
+            <button class="vote-btn" @click="onVote(record.model_b)">
+              👉 B is better
+            </button>
+            <button class="vote-btn" @click="onVote('tie')">
+              🤝 Tie
+            </button>
+            <button class="vote-btn" @click="onVote('both-bad')">
+              👎 Both are bad
+            </button>
+          </div>
+          <div class="votes" style="opacity: 0.5" v-if="listA.length > 0 && listA.length == votePosition">
+            <button class="vote-btn">
+              👈 A is better
+            </button>
+            <button class="vote-btn">
+              👉 B is better
+            </button>
+            <button class="vote-btn">
+              🤝 Tie
+            </button>
+            <button class="vote-btn">
+              👎 Both are bad
+            </button>
           </div>
 
-        </div>
-        <div style="display: flex;" v-if="record.winner">
-          <div style="flex-grow: 1;flex:1;text-align:left;font-weight: bold;font-size:16px;">
-            ModelA:{{ record.model_a }}
-          </div>
-          <div style="flex-grow: 1;flex:1;text-align:left;font-weight: bold;font-size:16px;">
-            ModelB:{{ record.model_b }}
-          </div>
-        </div>
-        <div class="votes" v-if="listA.length > 0 && listA.length > votePosition">
-          <button class="vote-btn" @click="onVote(record.model_a)">
-            👈 A is better
-          </button>
-          <button class="vote-btn" @click="onVote(record.model_b)">
-            👉 B is better
-          </button>
-          <button class="vote-btn" @click="onVote('tie')">
-            🤝 Tie
-          </button>
-          <button class="vote-btn" @click="onVote('both-bad')">
-            👎 Both are bad
-          </button>
-        </div>
-        <div class="votes" style="opacity: 0.5" v-else-if="listA.length > 0 && record.winner">
-          <button class="vote-btn">
-            👈 A is better
-          </button>
-          <button class="vote-btn">
-            👉 B is better
-          </button>
-          <button class="vote-btn">
-            🤝 Tie
-          </button>
-          <button class="vote-btn">
-            👎 Both are bad
-          </button>
-        </div>
-
-        <div class="chat-submit">
-          <div style="
+          <div class="chat-submit">
+            <div style="
                 padding: 1px;
                 flex-grow: 10;
                 border: 1px solid #e5e7eb;
@@ -91,27 +91,29 @@
                 flex-direction: row;
                 align-items: center;
               ">
-            <Input :border="false" :autosize="{ minRows: 1, maxRows: 2 }" v-model="prompt" type="textarea" :rows="1"
-              placeholder="Type a message..." />
+              <Input :border="false" :autosize="{ minRows: 1, maxRows: 2 }" v-model="prompt" type="textarea" :rows="1"
+                placeholder="Type a message..." />
+            </div>
+
+            <div v-if="isLoading" class="submit-btn-loading">Submit</div>
+            <div v-else class="submit-btn" @click="onSubmit('form')">Submit</div>
           </div>
 
-          <div v-if="isLoading" class="submit-btn-loading">Submit</div>
-          <div v-else class="submit-btn" @click="onSubmit('form')">Submit</div>
-        </div>
-
-        <div class="opterates">
-          <button class="opt-btn" @click="onClear">
-            <Icon color="#808695" size="20" type="ios-trash" />Clear history
-          </button>
-        </div>
-
-        <div class="options" style="display: none">
-          <div class="options-header">
-            <div>Options</div>
+          <div class="opterates">
+            <button class="opt-btn" @click="onClear">
+              <Icon color="#808695" size="20" type="ios-trash" />Clear history
+            </button>
           </div>
-          <div class="options-content" v-show="false"></div>
-        </div>
-      </main>
+
+          <div class="options" style="display: none">
+            <div class="options-header">
+              <div>Options</div>
+            </div>
+            <div class="options-content" v-show="false"></div>
+          </div>
+        </main>
+
+      </Form>
     </div>
 
   </div>
@@ -156,7 +158,7 @@ export default {
       rule: {
         judge: [
           { required: true, message: 'Please fill in the judge', trigger: 'blur' }
-        ],
+        ]
       }
     };
   },
@@ -197,8 +199,11 @@ export default {
         });
     },
     onClear: function () {
+      console.log('clear');
       this.listA = [];
       this.listB = [];
+      this.votePosition = 0;
+      this.prompt = '';
       this.generateModel();
     },
 
@@ -254,6 +259,7 @@ export default {
           return;
         }
         if (!this.prompt) {
+          this.$Message.error("please type a message");
           return;
         }
         if (!this.record.model_a) {

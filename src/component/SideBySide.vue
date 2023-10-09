@@ -68,7 +68,7 @@
             👎 Both are bad
           </button>
         </div>
-        <div class="votes" style="opacity: 0.5" v-else-if="listA.length > 0 && record.winner">
+        <div class="votes" style="opacity: 0.5" v-if="listA.length > 0 && listA.length == votePosition">
           <button class="vote-btn">
             👈 A is better
           </button>
@@ -202,8 +202,11 @@ export default {
         });
     },
     onClear: function () {
+      console.log('clear');
       this.listA = [];
       this.listB = [];
+      this.votePosition = 0;
+      this.prompt = '';
       this.generateModel();
     },
     doSubmit: async function () {
@@ -258,6 +261,7 @@ export default {
           return;
         }
         if (!this.prompt) {
+          this.$Message.error("please type a message");
           return;
         }
         if (!this.record.model_a) {
