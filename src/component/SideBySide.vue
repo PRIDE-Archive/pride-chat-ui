@@ -120,7 +120,7 @@
 </template>
   
 <script>
-import { chat } from "@/api/api";
+import { chat, saveBenchmark } from "@/api/api";
 
 export default {
   data() {
@@ -306,6 +306,20 @@ export default {
       let voteData = JSON.parse(localStorage.getItem('voteData')) || [];
       voteData.push(this.record);
       localStorage.setItem('voteData', JSON.stringify(voteData));
+
+      let data = {
+        model_a: this.record.model_a, model_b: this.record.model_b,
+        query: this.record.question,
+        judge: this.record.judge,
+        winner: this.record.winner,
+        time_a: this.record.model_a_timing,
+        time_b: this.record.model_b_timing,
+        answer_a: this.record.model_a_answer,
+        answer_b: this.record.model_b_answer
+      };
+      console.log(data);
+      saveBenchmark(data).then(res => {
+      })
     }
   },
 };

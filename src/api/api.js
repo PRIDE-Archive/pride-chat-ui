@@ -22,6 +22,10 @@ export const chat = (prompt, modelName) => {
   return post("/chat", { Chat: { prompt: prompt, model_name: modelName } });
 };
 
+export const saveBenchmark = (data) => {
+  return post("/saveBenchmark", { Benchmark: data });
+};
+
 export const chatTest = (prompt) => {
   return buildData({
     data: {
