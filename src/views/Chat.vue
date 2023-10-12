@@ -68,6 +68,12 @@
             <Icon color="#808695" size="20" type="ios-trash" />Clear
           </button>
         </div>
+        <div style="padding: 8px;margin-top:8px;color: gray; text-align: left; font-size: 12px;">
+          Disclaimer: This chatbot is designed to assist you with general information and basic inquiries. 
+          Please note that it is not a replacement for our dedicated  <a href="mailto:pride-support@ebi.ac.uk">helpdesk</a> support or official  <a href="https://www.ebi.ac.uk/pride/markdownpage/documentationpage">documentation</a>. 
+          While the chatbot is powered by a language model, it may occasionally produce responses that are unrelated or incorrect, known as LLM hallucinations, due to the inherent limitations of the technology. 
+          Therefore, we recommend using this tool as a supplementary resource and encourage you to consult our helpdesk and official documentation for critical or complex inquiries.
+        </div>
         <div class="options" style="display: none">
           <div class="options-header">
             <div>Options</div>
