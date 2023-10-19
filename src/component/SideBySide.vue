@@ -25,6 +25,7 @@
                   <div class="chat-complate">
                     {{ item.result }}
                     <div style="text-align: right" v-if="item.relevant">
+                      <span style="font-size: 10px; color: gray; margin-right: 2px;">{{ (item.timems/1000).toFixed(2) }}s</span>
                       <a @click="onRelevant(item.relevant)" type="primary" ghost>relevant</a>
                     </div>
                   </div>
@@ -46,6 +47,7 @@
                   <div class="chat-complate">
                     {{ item.result }}
                     <div style="text-align: right" v-if="item.relevant">
+                      <span style="font-size: 10px; color: gray; margin-right: 2px;">{{ (item.timems/1000).toFixed(2) }}s</span>
                       <a @click="onRelevant(item.relevant)" type="primary" ghost>relevant</a>
                     </div>
                   </div>
@@ -222,12 +224,14 @@ export default {
           Object.assign(resA.data, {
             prompt: this.prompt,
             relevant: resA.data["relevant-chunk"],
+            timems: resA.data["timems"]
           })
         );
         this.listB.push(
           Object.assign(resB.data, {
             prompt: this.prompt,
             relevant: resB.data["relevant-chunk"],
+            timems: resB.data["timems"]
           })
         );
         // console.log(this.listB);
@@ -319,6 +323,9 @@ export default {
       };
       console.log(data);
       saveBenchmark(data).then(res => {
+        this.$Message.success("Save successfully");
+      }).catch(e => {
+        this.$Message.error("Save failed");
       })
     }
   },
