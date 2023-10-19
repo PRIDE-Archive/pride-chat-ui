@@ -26,6 +26,10 @@ export const saveBenchmark = (data) => {
   return post("/saveBenchmark", { Benchmark: data });
 };
 
+export const getBenchmark = (page_num = 0, items_per_page = 100) => {
+  return get("/getBenchmark", { page_num,  items_per_page});
+};
+
 export const chatTest = (prompt) => {
   return buildData({
     data: {
