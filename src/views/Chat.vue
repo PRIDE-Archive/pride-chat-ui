@@ -9,7 +9,7 @@
               :label="item"
               :value="item"
               border
-              v-for="(item,index) in models"
+              v-for="(item, index) in models"
               :key="item"
             ></Radio>
           </RadioGroup>
@@ -27,6 +27,9 @@
               <div class="chat-complate">
                 {{ item.result }}
                 <div style="text-align: right" v-if="item.relevant">
+                  <span style="font-size: 10px; color: gray; margin-right: 2px"
+                    >{{ (item.timems / 1000).toFixed(2) }}s</span
+                  >
                   <a @click="onRelevant(item.relevant)" type="primary" ghost
                     >relevant</a
                   >
@@ -68,11 +71,28 @@
             <Icon color="#808695" size="20" type="ios-trash" />Clear
           </button>
         </div>
-        <div style="padding: 8px;margin-top:8px;color: gray; text-align: left; font-size: 12px;">
-          Disclaimer: This chatbot is designed to assist you with general information and basic inquiries. 
-          Please note that it is not a replacement for our dedicated  <a href="mailto:pride-support@ebi.ac.uk">helpdesk</a> support or official  <a href="https://www.ebi.ac.uk/pride/markdownpage/documentationpage">documentation</a>. 
-          While the chatbot is powered by a language model, it may occasionally produce responses that are unrelated or incorrect, known as LLM hallucinations, due to the inherent limitations of the technology. 
-          Therefore, we recommend using this tool as a supplementary resource and encourage you to consult our helpdesk and official documentation for critical or complex inquiries.
+        <div
+          style="
+            padding: 8px;
+            margin-top: 8px;
+            color: gray;
+            text-align: left;
+            font-size: 12px;
+          "
+        >
+          Disclaimer: This chatbot is designed to assist you with general
+          information and basic inquiries. Please note that it is not a
+          replacement for our dedicated
+          <a href="mailto:pride-support@ebi.ac.uk">helpdesk</a> support or
+          official
+          <a href="https://www.ebi.ac.uk/pride/markdownpage/documentationpage"
+            >documentation</a
+          >. While the chatbot is powered by a language model, it may
+          occasionally produce responses that are unrelated or incorrect, known
+          as LLM hallucinations, due to the inherent limitations of the
+          technology. Therefore, we recommend using this tool as a supplementary
+          resource and encourage you to consult our helpdesk and official
+          documentation for critical or complex inquiries.
         </div>
         <div class="options" style="display: none">
           <div class="options-header">
@@ -135,6 +155,7 @@ export default {
             Object.assign(res.data, {
               prompt: this.prePrompt,
               relevant: res.data["relevant-chunk"],
+              timems: res.data["timems"],
             })
           );
         })
@@ -165,6 +186,7 @@ export default {
             Object.assign(res.data, {
               prompt: this.prompt,
               relevant: res.data["relevant-chunk"],
+              timems: res.data["timems"],
             })
           );
           this.prePrompt = this.prompt;
