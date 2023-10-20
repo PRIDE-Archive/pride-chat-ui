@@ -19,11 +19,11 @@ const routes = [
     name: "benchmark",
     component: () => import("../views/Benchmark.vue"),
   },
-  {
-    path: "/resource",
-    name: "resource",
-    component: () => import("../views/Database.vue"),
-  },
+  // {
+  //   path: "/resource",
+  //   name: "resource",
+  //   component: () => import("../views/Database.vue"),
+  // },
   {
     path: "/relevant",
     name: "relevant",
