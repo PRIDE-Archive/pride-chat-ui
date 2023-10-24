@@ -27,7 +27,7 @@ export const saveBenchmark = (data) => {
 };
 
 export const getBenchmark = (page_num = 0, items_per_page = 100) => {
-  return get("/getBenchmark", { page_num,  items_per_page});
+  return get("/getBenchmark", { page_num, items_per_page });
 };
 
 export const chatTest = (prompt) => {
@@ -42,6 +42,10 @@ export const chatTest = (prompt) => {
 
 export const listFile = () => {
   return get("/load", {});
+};
+
+export const clearFiles = () => {
+  return get("/delete_all", {});
 };
 
 export const listFileTest = () => {
