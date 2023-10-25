@@ -3,7 +3,7 @@
     <navbar />
     <div class="container" style="min-height: 100vh; padding-top: 32px">
       <main class="content">
-        <div style="width: 100%" v-html="content"></div>
+        <div style="width: 100%; text-align: left;" v-html="content"></div>
       </main>
       <footer
         style="
@@ -56,7 +56,7 @@ export default {
     const mdIt = new MarkdownIt();
     let md = JSON.parse(localStorage.getItem("markdown"));
     this.content = mdIt.render(md);
-    console.log(md);
+    console.log(this.content);
   },
   beforeDestroy() {},
   methods: {},
