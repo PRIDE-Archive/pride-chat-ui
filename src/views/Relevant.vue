@@ -47,7 +47,8 @@ export default {
         console.error('no markdown');
         return;
       }
-      this.content = mdIt.render(md);
+      console.log(md);
+      // this.content = mdIt.render(md);
       // console.log(this.content);
     } catch (e) {
       console.error(e);
