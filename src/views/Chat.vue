@@ -3,44 +3,37 @@
     <navbar />
     <div class="container" style="min-height: 100vh; padding-top: 32px">
       <main class="content">
-        <div style="margin: 10px 0">
-          <RadioGroup v-model="model" @on-change="onModel">
-            <Radio
-              :label="item"
-              :value="item"
-              border
-              v-for="(item, index) in models"
-              :key="item"
-            ></Radio>
-          </RadioGroup>
+        <div style="margin: 10px 0; display: flex; align-items: center; justify-content: space-between;">
+          <div style="width:150px">
+        </div>
+          <div style="text-align: center;" >
+            <h2>{{ model }}</h2>
+          </div>
+          <div style="width:150px">
+            <Select v-model="model" style="width:150px">
+              <Option v-for="item in models" :value="item" :key="item">{{ item }}</Option>
+            </Select>
+          </div>
         </div>
 
         <div class="chat">
           <div class="chat-label">chatbot</div>
           <div class="chat-contents">
-            <div
-              class="chat-content"
-              v-for="(item, index) in list"
-              :key="index"
-            >
+            <div class="chat-content" v-for="(item, index) in list" :key="index">
               <div class="chat-prompt">{{ item.prompt }}</div>
               <div class="chat-complate">
                 {{ item.result }}
                 <div style="text-align: right" v-if="item.relevant">
-                  <span style="font-size: 10px; color: gray; margin-right: 2px"
-                    >{{ (item.timems / 1000).toFixed(2) }}s</span
-                  >
-                  <a @click="onRelevant(item.relevant)" type="primary" ghost
-                    >relevant</a
-                  >
+                  <span style="font-size: 10px; color: gray; margin-right: 2px">{{ (item.timems / 1000).toFixed(2)
+                  }}s</span>
+                  <a @click="onRelevant(item.relevant)" type="primary" ghost>relevant</a>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div class="chat-submit">
-          <div
-            style="
+          <div style="
               padding: 1px;
               flex-grow: 10;
               border: 1px solid #e5e7eb;
@@ -48,16 +41,9 @@
               display: flex;
               flex-direction: row;
               align-items: center;
-            "
-          >
-            <Input
-              :border="false"
-              :autosize="{ minRows: 1, maxRows: 2 }"
-              v-model="prompt"
-              type="textarea"
-              :rows="1"
-              placeholder="Type a message..."
-            />
+            ">
+            <Input :border="false" :autosize="{ minRows: 1, maxRows: 2 }" v-model="prompt" type="textarea" :rows="1"
+              placeholder="Type a message..." />
           </div>
           <div v-if="isLoading" class="submit-btn-loading">Submit</div>
           <div v-else class="submit-btn" @click="onSubmit">Submit</div>
@@ -71,23 +57,20 @@
             <Icon color="#808695" size="20" type="ios-trash" />Clear
           </button>
         </div>
-        <div
-          style="
+        <div style="
             padding: 8px;
             margin-top: 8px;
             color: gray;
             text-align: left;
             font-size: 12px;
-          "
-        >
+          ">
           Disclaimer: This chatbot is designed to assist you with general
           information and basic inquiries. Please note that it is not a
           replacement for our dedicated
           <a href="mailto:pride-support@ebi.ac.uk">helpdesk</a> support or
           official
-          <a href="https://www.ebi.ac.uk/pride/markdownpage/documentationpage"
-            >documentation</a
-          >. While the chatbot is powered by a language model, it may
+          <a href="https://www.ebi.ac.uk/pride/markdownpage/documentationpage">documentation</a>. While the chatbot is
+          powered by a language model, it may
           occasionally produce responses that are unrelated or incorrect, known
           as LLM hallucinations, due to the inherent limitations of the
           technology. Therefore, we recommend using this tool as a supplementary
