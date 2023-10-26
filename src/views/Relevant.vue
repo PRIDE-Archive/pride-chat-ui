@@ -40,12 +40,22 @@ export default {
     navbar,
   },
   mounted() {
-    const mdIt = new MarkdownIt();
-    let md = JSON.parse(localStorage.getItem("markdown"));
-    this.content = mdIt.render(md);
-    console.log(this.content);
+    try {
+      const mdIt = new MarkdownIt();
+      let md = JSON.parse(localStorage.getItem("markdown"));
+      if(!md){
+        console.error('no markdown');
+        return;
+      }
+      this.content = mdIt.render(md);
+      // console.log(this.content);
+    } catch (e) {
+      console.error(e);
+    }
+
+
   },
-  beforeDestroy() {},
+  beforeDestroy() { },
   methods: {},
 };
 </script>
