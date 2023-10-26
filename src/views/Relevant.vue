@@ -4,7 +4,10 @@
     <div class="container" style="min-height: 100vh; padding-top: 32px">
       <main class="content">
         <h1 style="margin-bottom: 16px;">Relevant Documents</h1>
-        <div style="width: 100%; text-align: left; font-size: 16px;line-height: 32px;" v-html="content"></div>
+        <div v-if="htmlContent" style="width: 100%; text-align: left; font-size: 16px;line-height: 32px;" v-html="htmlContent"></div>
+        <div v-else style="width: 100%; text-align: left; font-size: 16px;line-height: 32px;" >
+          {{ mdContent }}
+        </div>
       </main>
       <footer style="
           display: flex;
@@ -33,7 +36,9 @@ export default {
   data() {
     return {
       md: "## title",
-      content: "",
+      mdContent: "",
+      htmlContent: "",
+      isMd: false
     };
   },
   components: {
@@ -42,13 +47,13 @@ export default {
   mounted() {
     try {
       const mdIt = new MarkdownIt();
-      let md = JSON.parse(localStorage.getItem("markdown"));
-      if(!md){
+      this.mdContent = JSON.parse(localStorage.getItem("markdown"));
+      if(!this.mdContent){
         console.error('no markdown');
         return;
       }
-      console.log(md);
-      // this.content = mdIt.render(md);
+      console.log(this.mdContent);
+      this.htmlContent = mdIt.render(this.mdContent);
       // console.log(this.content);
     } catch (e) {
       console.error(e);
