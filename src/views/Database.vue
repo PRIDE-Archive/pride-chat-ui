@@ -2,20 +2,26 @@
   <div>
     <navbar />
     <div class="container" style="min-height: 100vh">
-      <div style="text-align: left; padding: 8px 16px; display:flex; ">
-        <Upload ref="upload" v-model="files" :action="action" :headers="headers" :show-upload-list="false" :format="['md']"
-          accept="*.md" name="files" multiple :webkitdirectory="true" :before-upload="onBeforeUpload"
-          :on-format-error="handleFormatError" :on-success="onUploadSuccess" :on-error="onUploadFailed"
-          :on-progress="test">
-          <Button icon="ios-cloud-upload-outline">Upload Folder</Button>
-        </Upload>
-        <Upload ref="upload" v-model="files" style="margin-left:8px;" :action="action" :headers="headers" :show-upload-list="false"
-          :format="['md']" accept="*.md" name="files" :webkitdirectory="false" :before-upload="onBeforeUpload"
-          :on-format-error="handleFormatError" :on-success="onUploadSuccess" :on-error="onUploadFailed"
-          :on-progress="test">
-          <Button icon="ios-cloud-upload-outline">Upload File</Button>
-        </Upload>
-        <Button style="margin-left:8px;" @click="onDeleteAll" type="warning">Delete All</Button>
+
+      <div style="display: flex; align-items: center;justify-content: space-between; ">
+        <div style="text-align: left; padding: 8px 16px; display:flex; ">
+          <Upload ref="upload" v-model="files" :action="action" :headers="headers" :show-upload-list="false"
+            :format="['md']" accept="*.md" name="files" multiple :webkitdirectory="true" :before-upload="onBeforeUpload"
+            :on-format-error="handleFormatError" :on-success="onUploadSuccess" :on-error="onUploadFailed"
+            :on-progress="test">
+            <Button icon="ios-cloud-upload-outline">Upload Folder</Button>
+          </Upload>
+          <Upload ref="upload" v-model="files" style="margin-left:8px;" :action="action" :headers="headers"
+            :show-upload-list="false" :format="['md']" accept="*.md" name="files" :webkitdirectory="false"
+            :before-upload="onBeforeUpload" :on-format-error="handleFormatError" :on-success="onUploadSuccess"
+            :on-error="onUploadFailed" :on-progress="test">
+            <Button icon="ios-cloud-upload-outline">Upload File</Button>
+          </Upload>
+          <Button style="margin-left:8px;" @click="onDeleteAll" type="warning">Delete All</Button>
+        </div>
+        <div>
+          <router-link class="navBar " to="/visualize"><Button type="success">Visualize</Button></router-link>
+        </div>
       </div>
       <div style="padding: 8px 16px">
         <Table stripe border :columns="columns" :data="list">

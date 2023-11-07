@@ -17,7 +17,7 @@
             <div class="chat-contents">
               <div class="chat-content" v-for="(item, index) in listA" :key="index">
                 <div class="chat-prompt">{{ item.prompt }}</div>
-                <div class="chat-complate">
+                <div class="chat-complete">
                   {{ item.result }}
                   <div style="text-align: right" v-if="item.relevant">
                     <span style="font-size: 10px; color: gray; margin-right: 2px;">{{ (item.timems/1000).toFixed(2) }}s</span>
@@ -34,7 +34,7 @@
             <div class="chat-contents">
               <div class="chat-content" v-for="(item, index) in listB" :key="index">
                 <div class="chat-prompt">{{ item.prompt }}</div>
-                <div class="chat-complate">
+                <div class="chat-complete">
                   {{ item.result }}
                   <div style="text-align: right" v-if="item.relevant">
                     <span style="font-size: 10px; color: gray; margin-right: 2px;">{{ (item.timems/1000).toFixed(2) }}s</span>

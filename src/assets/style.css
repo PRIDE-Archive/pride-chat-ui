@@ -125,7 +125,8 @@
   unicode-bidi: isolate;
 }
 
-.chat-complate {
+.chat-complete {
+  text-align: justify;
   padding: 6px 12px;
   margin: 8px 8px 0 8px;
   background-color: #f9fafb;

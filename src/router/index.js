@@ -25,6 +25,11 @@ const routes = [
     component: () => import("../views/Database.vue"),
   },
   {
+    path: "/visualize",
+    name: "visualize",
+    component: () => import("../views/Visualize.vue"),
+  },
+  {
     path: "/relevant",
     name: "relevant",
     component: () => import("../views/Relevant.vue"),

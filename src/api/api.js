@@ -1,4 +1,4 @@
-import { get, post } from "./request";
+import { get, post, resourceURL } from "./request";
 
 const buildData = (data) => {
   return new Promise((resolve, reject) => {
@@ -41,11 +41,11 @@ export const chatTest = (prompt) => {
 };
 
 export const listFile = () => {
-  return get("/load", {});
+  return get("/load", {}, { baseURL: resourceURL });
 };
 
 export const clearFiles = () => {
-  return get("/delete_all", {});
+  return get("/delete_all", {}, { baseURL: resourceURL });
 };
 
 export const listFileTest = () => {
@@ -58,7 +58,7 @@ export const listFileTest = () => {
 };
 
 export const deleteFile = (file) => {
-  return post("/delete", { filename: file });
+  return post("/delete", { filename: file }, { baseURL: resourceURL });
 };
 
 export const deleteFileTest = (file) => {
@@ -67,4 +67,8 @@ export const deleteFileTest = (file) => {
 
 export const donwloadFile = (file) => {
   return post("/download", { filename: file });
+};
+
+export const getTree = () => {
+  return get("/get_tree", {});
 };

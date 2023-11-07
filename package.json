@@ -9,6 +9,7 @@
   "dependencies": {
     "axios": "^1.4.0",
     "core-js": "^3.8.3",
+    "echarts": "^5.4.3",
     "markdown-it": "^13.0.1",
     "qs": "^6.11.2",
     "view-design": "^4.7.0",
