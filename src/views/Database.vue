@@ -46,7 +46,7 @@
 
 <script>
 import { listFile, deleteFile, donwloadFile, clearFiles } from "@/api/api";
-import { baseURL } from "@/api/request";
+import { baseURL, resourceURL } from "@/api/request";
 import navbar from "./Navbar.vue";
 export default {
   data() {
@@ -82,6 +82,7 @@ export default {
       list: [],
       action: "",
       baseURL: baseURL,
+      resourceURL: resourceURL,
       headers: { "Access-Control-Allow-Origin": "*" },
     };
   },
@@ -90,7 +91,7 @@ export default {
   },
   async mounted() {
     this.listAllFiles();
-    this.action = baseURL + "/upload";
+    this.action = resourceURL + "/upload";
   },
   beforeDestroy() { },
   methods: {
