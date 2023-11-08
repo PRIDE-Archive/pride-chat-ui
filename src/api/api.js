@@ -66,9 +66,9 @@ export const deleteFileTest = (file) => {
 };
 
 export const donwloadFile = (file) => {
-  return post("/download", { filename: file });
+  return get("/download", { filename: file }, { baseURL: resourceURL });
 };
 
 export const getTree = () => {
-  return get("/get_tree", {});
+  return get("/get_tree", {}, { baseURL: resourceURL });
 };
