@@ -22,11 +22,13 @@ const routes = [
   {
     path: "/resource",
     name: "resource",
+    meta: { auth: true },
     component: () => import("../views/Database.vue"),
   },
   {
     path: "/visualize",
     name: "visualize",
+    meta: { auth: true },
     component: () => import("../views/Visualize.vue"),
   },
   {
@@ -34,12 +36,30 @@ const routes = [
     name: "relevant",
     component: () => import("../views/Relevant.vue"),
   },
+  {
+    path: "/login",
+    name: "login",
+    component: () => import("../views/Login.vue"),
+  },
 ];
 
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
+});
+
+const isAuthenticated = () => {
+  let userName = localStorage.getItem("userName");
+  return !!userName;
+};
+
+router.beforeEach((to, from, next) => {
+  // ...
+  console.log("to:", to);
+  if (to.meta.auth && !isAuthenticated()) {
+    next({ name: "login" });
+  } else next();
 });
 
 export default router;
