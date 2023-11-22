@@ -8,7 +8,7 @@
         <router-link class="navBar" to="/benchmark">Benchmark</router-link>
         <!-- <router-link class="navBar" to="/resource">Database</router-link> -->
         <Dropdown v-if="userName">
-          <div href="javascript:void(0)">
+          <div style="cursor: pointer;">
             <Icon type="md-person" />
             {{ userName }}
             <Icon type="ios-arrow-down"></Icon>
@@ -35,22 +35,25 @@ export default {
   async mounted() {
     this.loadUserName();
     window.addEventListener('userName', this.loadUserName);
-   },
-  beforeDestroy() { 
+  },
+  beforeDestroy() {
     window.removeEventListener('userName', this.loadUserName);
   },
   methods: {
-    loadUserName(){
+    loadUserName() {
       this.userName = localStorage.getItem('userName');
     },
     logout() {
       console.log('logout');
       this.$Modal.confirm({
-        title: 'info',
-        content: '<p>confirm to logout</p>',
+        title: 'Warning',
+        content: 'Do you want to log out?',
         onOk: () => {
           localStorage.removeItem('userName');
-          location.reload();
+          this.$Message.success({ content: 'Logout Success', duration: 2 })
+          setTimeout(() => {
+            location.reload();
+          }, 2000);
         },
         onCancel: () => {
 
