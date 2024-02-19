@@ -6,6 +6,9 @@
         <TabPane label="Chatbot Arena(battle)" name="battle">
           <battle></battle>
         </TabPane>
+        <TabPane label="Dataset Search" name="chatPx">
+          <chat-px></chat-px>
+        </TabPane>
         <!-- <TabPane label="Chatbot Arena(side-by-side)" name="side"><side-by-side></side-by-side></TabPane> -->
         <Button @click="exportData" size="small" slot="extra">Export Data</Button>
         <Button style="margin-left:8px;" @click="clearData" size="small" slot="extra">Clear Data</Button>
@@ -18,6 +21,7 @@
 import navbar from "./Navbar.vue";
 import Battle from "@/component/Battle.vue";
 import SideBySide from "@/component/SideBySide.vue";
+import ChatPx from "./ChatPx.vue";
 
 export default {
   data() {
@@ -27,7 +31,8 @@ export default {
   components: {
     navbar,
     Battle,
-    SideBySide
+    SideBySide,
+    ChatPx
   },
   async mounted() {
 
