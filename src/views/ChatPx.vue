@@ -3,16 +3,16 @@
     <div class="container" style="min-height: 100vh;">
       <main class="content">
         <div style="margin: 10px 0; display: flex; align-items: center; justify-content: space-between;">
-          <div style="width:150px">
-          </div>
-          <div style="text-align: center;">
+          <!-- <div style="width:150px">
+          </div> -->
+          <!-- <div style="text-align: center;">
             <h2>{{ model }}</h2>
-          </div>
-          <div style="width:150px">
+          </div> -->
+          <!-- <div style="width:150px">
             <Select v-model="model" style="width:150px">
               <Option v-for="item in models" :value="item" :key="item">{{ item }}</Option>
             </Select>
-          </div>
+          </div> -->
         </div>
 
         <div class="chat">
@@ -145,9 +145,11 @@ export default {
       this.$Spin.show();
       chat(this.prePrompt)
         .then((res) => {
+          const mdIt = new MarkdownIt();
           this.list.push(
             Object.assign(res.data, {
-              prompt: this.prePrompt,
+              prompt: mdIt.render(this.prePrompt),
+              result: mdIt.render(this.PXDIdentifiers(res.data.result)),
               relevant: res.data["relevant-chunk"],
               timems: res.data["timems"],
             })
