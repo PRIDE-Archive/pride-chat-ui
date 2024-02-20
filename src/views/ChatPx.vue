@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="container" style="min-height: 100vh; padding-top: 32px">
+    <div class="container" style="min-height: 100vh;">
       <main class="content">
         <div style="margin: 10px 0; display: flex; align-items: center; justify-content: space-between;">
           <div style="width:150px">

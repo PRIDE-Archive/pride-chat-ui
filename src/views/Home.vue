@@ -3,12 +3,12 @@
     <navbar />
     <div class="container" style="min-height: 100vh; padding-top: 16px">
       <Tabs value="battle" :animated="false">
-        <TabPane label="Chatbot Arena(battle)" name="battle">
-          <battle></battle>
+        <TabPane label="PRIDE Assistant" name="battle">
+          <chat></chat>
         </TabPane>
-        <!-- <TabPane label="Dataset Search" name="chatPx">
+        <TabPane label="Dataset Search" name="chatPx">
           <chat-px></chat-px>
-        </TabPane> -->
+        </TabPane>
         <!-- <TabPane label="Chatbot Arena(side-by-side)" name="side"><side-by-side></side-by-side></TabPane> -->
         <Button @click="exportData" size="small" slot="extra">Export Data</Button>
         <Button style="margin-left:8px;" @click="clearData" size="small" slot="extra">Clear Data</Button>
@@ -22,6 +22,7 @@ import navbar from "./Navbar.vue";
 import Battle from "@/component/Battle.vue";
 import SideBySide from "@/component/SideBySide.vue";
 import ChatPx from "./ChatPx.vue";
+import Chat from "./Chat.vue";
 
 export default {
   data() {
@@ -32,6 +33,7 @@ export default {
     navbar,
     Battle,
     SideBySide,
+    Chat,
     ChatPx
   },
   async mounted() {

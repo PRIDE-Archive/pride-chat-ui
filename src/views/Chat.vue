@@ -1,7 +1,6 @@
 <template>
   <div>
-    <navbar />
-    <div class="container" style="min-height: 100vh; padding-top: 32px">
+    <div class="container" style="min-height: 100vh; ">
       <main class="content">
         <div style="margin: 10px 0; display: flex; align-items: center; justify-content: space-between;">
           <div style="width:150px">
@@ -93,6 +92,7 @@ import { chat } from "@/api/api";
 import navbar from "./Navbar.vue";
 
 export default {
+  name: "chat",
   data() {
     return {
       prompt: "",
