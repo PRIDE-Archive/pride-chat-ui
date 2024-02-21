@@ -23,11 +23,26 @@
               <div class="chat-complete">
                 <div style="padding-left: 16px;" v-html="item.result"></div>
                 <!-- {{ item.result }} -->
-                <div style="text-align: right" v-if="item.relevant">
-                  <span style="font-size: 10px; color: gray; margin-right: 2px">{{ (item.timems / 1000).toFixed(2)
-                  }}s</span>
-                  <a @click="onRelevant(item.relevant)" type="primary" ghost>relevant</a>
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                  <div style="display: flex; align-items: center; justify-content: start; margin-top:4px;">
+                    <div :class="{ 'grayed-out': item.feedback }"  style="cursor: pointer;" @click="!item.feedback && onQueryFeedback(item.prompt, item.answer, 'good', index)">
+                      <img src="/good.png" style="width: 18px; height: 18px;" />
+                    </div>
+                    <div :class="{ 'grayed-out': item.feedback }"  style="cursor: pointer;margin: 0 4px;"
+                      @click="!item.feedback && onQueryFeedback(item.prompt, item.answer, 'moderate', index)">
+                      <img src="/moderate.png" style="width: 18px; height: 18px;" />
+                    </div>
+                    <div :class="{ 'grayed-out': item.feedback }"  style="cursor: pointer;" @click="!item.feedback && onQueryFeedback(item.prompt, item.answer, 'bad', index)">
+                      <img src="/bad.png" style="width: 18px; height: 18px;" />
+                    </div>
+                  </div>
+                  <div v-if="item.relevant">
+                    <span style="font-size: 10px; color: gray; margin-right: 2px">{{ (item.timems / 1000).toFixed(2)
+                    }}s</span>
+                    <a @click="onRelevant(item.relevant)" type="primary" ghost>give me more</a>
+                  </div>
                 </div>
+
               </div>
             </div>
           </div>
@@ -90,7 +105,7 @@
 
 <script>
 import MarkdownIt from "markdown-it";
-import { chatPx as chat } from "@/api/api";
+import { chatPx as chat, saveProjectsQueryFeedback } from "@/api/api";
 import navbar from "./Navbar.vue";
 
 export default {
@@ -125,6 +140,12 @@ export default {
   async mounted() { },
   beforeDestroy() { },
   methods: {
+    onQueryFeedback: function (prompt, result, feedback, index) {
+      saveProjectsQueryFeedback(prompt, result, feedback).then((res) => {
+        this.$Message.success("Feedback Success");
+        this.list[index].feedback = true;
+      })
+    },
     PXDIdentifiers: function (text) {
       const baseUrl = 'https://www.ebi.ac.uk/pride/archive/projects/';
       const regex = /PXD\d{6}/g;
@@ -133,7 +154,7 @@ export default {
         return `[${matchStr}](${link})`;
       });
     },
-    
+
     onModel: function (model) {
       console.log(model);
     },
@@ -148,7 +169,9 @@ export default {
           const mdIt = new MarkdownIt();
           this.list.push(
             Object.assign(res.data, {
-              prompt: mdIt.render(this.prePrompt),
+              prompt: this.prePrompt,
+              feedback: false,
+              answer: res.data.result,
               result: mdIt.render(this.PXDIdentifiers(res.data.result)),
               relevant: res.data["relevant-chunk"],
               timems: res.data["timems"],
@@ -167,16 +190,16 @@ export default {
     },
     onSubmit: async function () {
 
-//       let result = `Based on the information provided, there are several datasets related to brain cancer available from the Mathias Mann group. Here are a few examples:
+      //       let result = `Based on the information provided, there are several datasets related to brain cancer available from the Mathias Mann group. Here are a few examples:
 
-// PXD006607: "Proteomic analysis of human Medulloblastoma reveals distinct activated pathways between subgroups"
-// PXD000548: "Proteome analyses of the human Anterior Temporal Lobe and Corpus Callosum"
-// PXD005445: "Characterization of the human Anterior Temporal Lobe and Corpus Callosum"
-// PXD004684: "CEGS Proteomics: A multiregional proteomic survey of the postnatal human brain"
-// These datasets are available on the ProteomeXchange database and can be accessed through the database's search function.
+      // PXD006607: "Proteomic analysis of human Medulloblastoma reveals distinct activated pathways between subgroups"
+      // PXD000548: "Proteome analyses of the human Anterior Temporal Lobe and Corpus Callosum"
+      // PXD005445: "Characterization of the human Anterior Temporal Lobe and Corpus Callosum"
+      // PXD004684: "CEGS Proteomics: A multiregional proteomic survey of the postnatal human brain"
+      // These datasets are available on the ProteomeXchange database and can be accessed through the database's search function.
 
-// Please note that the datasets are related to brain cancer and not lung cancer, as you mentioned in your question. If you are looking for lung cancer datasets, you may want to search for other databases or resources.`
-//       console.log(this.PXDIdentifiers(result));
+      // Please note that the datasets are related to brain cancer and not lung cancer, as you mentioned in your question. If you are looking for lung cancer datasets, you may want to search for other databases or resources.`
+      //       console.log(this.PXDIdentifiers(result));
 
       if (!this.prompt) {
         return;
@@ -192,7 +215,9 @@ export default {
         .then((res) => {
           const mdIt = new MarkdownIt();
           this.list.push({
-            prompt: mdIt.render(this.prompt),
+            prompt: this.prompt,
+            feedback: false,
+            answer: res.data.result,
             result: mdIt.render(this.PXDIdentifiers(res.data.result)),
             relevant: res.data["relevant-chunk"],
             timems: res.data["timems"]
@@ -211,8 +236,9 @@ export default {
     },
     onRelevant: function (relevant) {
       console.log(relevant);
-      localStorage.setItem("markdown", JSON.stringify(relevant));
-      window.open("relevant");
+      this.$Message.info("coming soon");
+      // localStorage.setItem("markdown", JSON.stringify(relevant));
+      // window.open("relevant");
     },
   },
 };
@@ -220,4 +246,13 @@ export default {
 
 <style scoped>
 @import "@/assets/style.css";
+
+.grayed-out {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.grayed-out img {
+  filter: grayscale(100%);
+  pointer-events: none;
+}
 </style>
