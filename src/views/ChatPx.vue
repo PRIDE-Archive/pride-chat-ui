@@ -25,18 +25,18 @@
                 <!-- {{ item.result }} -->
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                   <div style="display: flex; align-items: center; justify-content: start; margin-top:4px;">
-                    <!-- <div :class="{ 'grayed-out': item.feedback }" style="cursor: pointer;"
+                    <div :class="{ 'grayed-out': item.feedback }" style="cursor: pointer;"
                       @click="!item.feedback && onQueryFeedback(item.prompt, item.answer, 'good', index)">
                       <img :src="good" style="width: 18px; height: 18px;" />
                     </div>
                     <div :class="{ 'grayed-out': item.feedback }" style="cursor: pointer;margin: 0 4px;"
                       @click="!item.feedback && onQueryFeedback(item.prompt, item.answer, 'moderate', index)">
-                      <img :src="moderate" style="width: 18px; height: 18px;" />
+                      <img :src="balance" style="width: 18px; height: 18px;" />
                     </div>
                     <div :class="{ 'grayed-out': item.feedback }" style="cursor: pointer;"
                       @click="!item.feedback && onQueryFeedback(item.prompt, item.answer, 'bad', index)">
                       <img :src="bad" style="width: 18px; height: 18px;" />
-                    </div> -->
+                    </div>
                   </div>
                   <div v-if="item.relevant">
                     <span style="font-size: 10px; color: gray; margin-right: 2px">{{ (item.timems / 1000).toFixed(2)
@@ -114,9 +114,9 @@ export default {
   name: "chatPx",
   data() {
     return {
-      // good: require("@/assets/good.png"),
-      // bad: require("@/assets/bad.png"),
-      // moderate: require("@/assets/moderate.png"),
+      good: require("@/assets/good.png"),
+      bad: require("@/assets/bad.png"),
+      balance: require("../assets/balance.png"),
       prompt: "",
       prePrompt: "",
       list: [],
