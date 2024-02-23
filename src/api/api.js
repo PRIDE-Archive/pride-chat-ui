@@ -30,6 +30,10 @@ export const chatPx = (prompt, modelName) => {
   return post("/chat_px", { Chat: { prompt: prompt, model_name: modelName } });
 };
 
+export const similarProjects = (data) => {
+  return get("/similarProjects",{accessions: data});
+};
+
 export const saveBenchmark = (data) => {
   return post("/saveBenchmark", { Benchmark: data });
 };

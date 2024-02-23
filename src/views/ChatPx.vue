@@ -19,27 +19,29 @@
           <div class="chat-label">chatbot</div>
           <div class="chat-contents">
             <div class="chat-content" v-for="(item, index) in list" :key="index">
-              <div class="chat-prompt" v-html="item.prompt"></div>
+              <div class="chat-prompt" v-if="item.prompt" v-html="item.prompt"></div>
               <div class="chat-complete">
                 <div style="padding-left: 16px;" v-html="item.result"></div>
                 <!-- {{ item.result }} -->
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                   <div style="display: flex; align-items: center; justify-content: start; margin-top:4px;">
-                    <div :class="{ 'grayed-out': item.feedback }"  style="cursor: pointer;" @click="!item.feedback && onQueryFeedback(item.prompt, item.answer, 'good', index)">
+                    <!-- <div :class="{ 'grayed-out': item.feedback }" style="cursor: pointer;"
+                      @click="!item.feedback && onQueryFeedback(item.prompt, item.answer, 'good', index)">
                       <img :src="good" style="width: 18px; height: 18px;" />
                     </div>
-                    <div :class="{ 'grayed-out': item.feedback }"  style="cursor: pointer;margin: 0 4px;"
+                    <div :class="{ 'grayed-out': item.feedback }" style="cursor: pointer;margin: 0 4px;"
                       @click="!item.feedback && onQueryFeedback(item.prompt, item.answer, 'moderate', index)">
                       <img :src="moderate" style="width: 18px; height: 18px;" />
                     </div>
-                    <div :class="{ 'grayed-out': item.feedback }"  style="cursor: pointer;" @click="!item.feedback && onQueryFeedback(item.prompt, item.answer, 'bad', index)">
+                    <div :class="{ 'grayed-out': item.feedback }" style="cursor: pointer;"
+                      @click="!item.feedback && onQueryFeedback(item.prompt, item.answer, 'bad', index)">
                       <img :src="bad" style="width: 18px; height: 18px;" />
-                    </div>
+                    </div> -->
                   </div>
                   <div v-if="item.relevant">
                     <span style="font-size: 10px; color: gray; margin-right: 2px">{{ (item.timems / 1000).toFixed(2)
                     }}s</span>
-                    <a @click="onRelevant(item.relevant)" type="primary" ghost>give me more</a>
+                    <a @click="onRelevant(item.relevant, index)" type="primary" ghost>give me more</a>
                   </div>
                 </div>
 
@@ -105,16 +107,16 @@
 
 <script>
 import MarkdownIt from "markdown-it";
-import { chatPx as chat, saveProjectsQueryFeedback } from "@/api/api";
+import { chatPx as chat, saveProjectsQueryFeedback, similarProjects } from "@/api/api";
 import navbar from "./Navbar.vue";
 
 export default {
   name: "chatPx",
   data() {
     return {
-      good: require("@/assets/good.png"),
-      bad: require("@/assets/bad.png"),
-      moderate: require("@/assets/moderate.png"),
+      // good: require("@/assets/good.png"),
+      // bad: require("@/assets/bad.png"),
+      // moderate: require("@/assets/moderate.png"),
       prompt: "",
       prePrompt: "",
       list: [],
@@ -220,6 +222,7 @@ export default {
           this.list.push({
             prompt: this.prompt,
             feedback: false,
+            isMore: false,
             answer: res.data.result,
             result: mdIt.render(this.PXDIdentifiers(res.data.result)),
             relevant: res.data["relevant-chunk"],
@@ -237,11 +240,36 @@ export default {
           this.$Spin.hide();
         });
     },
-    onRelevant: function (relevant) {
+    onRelevant: function (relevant, index) {
       console.log(relevant);
-      this.$Message.info("coming soon");
-      // localStorage.setItem("markdown", JSON.stringify(relevant));
-      // window.open("relevant");
+      similarProjects(relevant).then((res) => {
+        this.list[index].isMore = true;
+        console.log(res.data);
+
+        if (!res || !res.data || !res.data.length) {
+          return;
+        }
+
+        let result = "";
+        res.data.forEach((element, index) => {
+          console.log(index, element);
+          let content = `${index + 1}.Accession: ${this.PXDIdentifiers(element.accession)}\n` +
+            `\tTitle: ${element.title}\n\n\n`
+          console.log(content);
+          result += content;
+        });
+        // const mdIt = new MarkdownIt();
+        // this.list.push({
+        //     feedback: true,
+        //     isMore: true,
+        //     result: mdIt.render(result),
+
+        //   });
+        localStorage.setItem("markdown", JSON.stringify(result));
+        window.open("relevant");
+      });
+      // this.$Message.info("coming soon");
+
     },
   },
 };
@@ -254,6 +282,7 @@ export default {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
 .grayed-out img {
   filter: grayscale(100%);
   pointer-events: none;
