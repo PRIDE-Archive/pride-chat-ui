@@ -3,16 +3,16 @@
     <div class="container" style="min-height: 100vh;">
       <main class="content">
         <div style="margin: 10px 0; display: flex; align-items: center; justify-content: space-between;">
-          <!-- <div style="width:150px">
-          </div> -->
-          <!-- <div style="text-align: center;">
+          <div style="width:150px">
+          </div>
+          <div style="text-align: center;">
             <h2>{{ model }}</h2>
-          </div> -->
-          <!-- <div style="width:150px">
+          </div>
+          <div style="width:150px">
             <Select v-model="model" style="width:150px">
               <Option v-for="item in models" :value="item" :key="item">{{ item }}</Option>
             </Select>
-          </div> -->
+          </div>
         </div>
 
         <div class="chat">
@@ -116,7 +116,7 @@ export default {
     return {
       good: require("@/assets/good.png"),
       bad: require("@/assets/bad.png"),
-      balance: require("../assets/balance.png"),
+      balance: require("@/assets/balance.png"),
       prompt: "",
       prePrompt: "",
       list: [],
@@ -124,11 +124,12 @@ export default {
       models: [
         // "llama2-chat",
         "llama2-13b-chat",
-        "chatglm2-6b",
+        // "chatglm2-6b",
         // "GPT4ALL",
         // "mpt-7b",
         // "baichuan-7b",
         // "vicuna-13b",
+        "Mixtral"
       ],
       isLoading: false,
       showOption: true,
@@ -242,33 +243,35 @@ export default {
     },
     onRelevant: function (relevant, index) {
       console.log(relevant);
-      similarProjects(relevant).then((res) => {
-        this.list[index].isMore = true;
-        console.log(res.data);
+      this.$Spin.show();
+      similarProjects(relevant)
+        .then((res) => {
+          this.list[index].isMore = true;
+          console.log(res.data);
+          if (!res || !res.data || !res.data.length) {
+            return;
+          }
 
-        if (!res || !res.data || !res.data.length) {
-          return;
-        }
+          let result = "";
 
-        let result = "";
-        res.data.forEach((element, index) => {
-          console.log(index, element);
-          let content = `${index + 1}.Accession: ${this.PXDIdentifiers(element.accession)}\n` +
-            `\tTitle: ${element.title}\n\n\n`
-          console.log(content);
-          result += content;
+          res.data.forEach((element, index) => {
+            let content = `${index + 1}.&ensp;Accession: ${this.PXDIdentifiers(element.accession)}\n
+&ensp;&ensp;Title: ${element.title}
+
+`;
+            result += content;
+          });
+
+          localStorage.setItem("markdown", (result));
+          window.open("relevant");
+
+        })
+        .catch((e) => {
+          this.$Message.warning("query failed");
+        })
+        .finally(() => {
+          this.$Spin.hide();
         });
-        // const mdIt = new MarkdownIt();
-        // this.list.push({
-        //     feedback: true,
-        //     isMore: true,
-        //     result: mdIt.render(result),
-
-        //   });
-        localStorage.setItem("markdown", JSON.stringify(result));
-        window.open("relevant");
-      });
-      // this.$Message.info("coming soon");
 
     },
   },

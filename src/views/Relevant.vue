@@ -42,7 +42,7 @@ export default {
   mounted() {
     try {
       const mdIt = new MarkdownIt();
-      let md = JSON.parse(localStorage.getItem("markdown"));
+      let md = (localStorage.getItem("markdown"));
       console.log(md);
       this.content = mdIt.render(md);
       console.log(this.content);

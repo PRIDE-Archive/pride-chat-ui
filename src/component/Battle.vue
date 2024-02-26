@@ -133,10 +133,11 @@ export default {
       models: [
         // "llama2-chat",
         "llama2-13b-chat",
-        "chatglm2-6b",
+        // "chatglm2-6b",
         // "mpt-7b",
         // "baichuan-7b",
         // "vicuna-13b",
+        "Mixtral"
       ],
       isLoading: 0,
       votePosition: 0,
@@ -277,7 +278,7 @@ export default {
     },
     onRelevant: function (relevant) {
       console.log(relevant);
-      localStorage.setItem("markdown", JSON.stringify(relevant));
+      localStorage.setItem("markdown", (relevant));
       window.open("relevant");
     },
     getCurrentData() {

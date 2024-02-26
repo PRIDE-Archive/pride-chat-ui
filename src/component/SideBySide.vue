@@ -282,7 +282,7 @@ export default {
     },
     onRelevant: function (relevant) {
       console.log(relevant);
-      localStorage.setItem("markdown", JSON.stringify(relevant));
+      localStorage.setItem("markdown", (relevant));
       window.open("relevant");
     },
     getCurrentData() {

@@ -4,8 +4,8 @@
       <main class="content">
         <div style="margin: 10px 0; display: flex; align-items: center; justify-content: space-between;">
           <div style="width:150px">
-        </div>
-          <div style="text-align: center;" >
+          </div>
+          <div style="text-align: center;">
             <h2>{{ model }}</h2>
           </div>
           <div style="width:150px">
@@ -102,11 +102,12 @@ export default {
       models: [
         // "llama2-chat",
         "llama2-13b-chat",
-        "chatglm2-6b",
+        // "chatglm2-6b",
         // "GPT4ALL",
         // "mpt-7b",
         // "baichuan-7b",
         // "vicuna-13b",
+        "Mixtral"
       ],
       isLoading: false,
       showOption: true,
@@ -120,8 +121,8 @@ export default {
   components: {
     navbar,
   },
-  async mounted() {},
-  beforeDestroy() {},
+  async mounted() { },
+  beforeDestroy() { },
   methods: {
     onModel: function (model) {
       console.log(model);
@@ -185,7 +186,7 @@ export default {
     },
     onRelevant: function (relevant) {
       console.log(relevant);
-      localStorage.setItem("markdown", JSON.stringify(relevant));
+      localStorage.setItem("markdown", (relevant));
       window.open("relevant");
     },
   },
