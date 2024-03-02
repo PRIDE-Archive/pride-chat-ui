@@ -22,8 +22,8 @@ export const chat = (prompt, modelName) => {
   return post("/chat", { Chat: { prompt: prompt, model_name: modelName } });
 };
 
-export const saveProjectsQueryFeedback = (prompt, result, feedback) => {
-  return post("/saveProjectsQueryFeedback",{Feedback: { query: prompt, answer: result, feedback: feedback  }});
+export const saveProjectsQueryFeedback = (prompt, result, feedback, source, model, time_ms) => {
+  return post("/saveQueryFeedback",{Feedback: { query: prompt, answer: result, feedback: feedback, source, model, time_ms  }});
 };
 
 export const chatPx = (prompt, modelName) => {

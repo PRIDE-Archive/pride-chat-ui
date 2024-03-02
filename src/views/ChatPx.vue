@@ -123,13 +123,14 @@ export default {
       model: "llama2-13b-chat",
       models: [
         // "llama2-chat",
+        "chatglm3-6b",
         "llama2-13b-chat",
-        // "chatglm2-6b",
+        "Mixtral",
+        "open-hermes",
         // "GPT4ALL",
         // "mpt-7b",
         // "baichuan-7b",
         // "vicuna-13b",
-        "Mixtral"
       ],
       isLoading: false,
       showOption: true,
@@ -147,7 +148,7 @@ export default {
   beforeDestroy() { },
   methods: {
     onQueryFeedback: function (prompt, result, feedback, index) {
-      saveProjectsQueryFeedback(prompt, result, feedback).then((res) => {
+      saveProjectsQueryFeedback(prompt, result, feedback,'pride_projects_search', this.model).then((res) => {
         this.$Message.success("Feedback Success");
         this.list[index].feedback = true;
       })

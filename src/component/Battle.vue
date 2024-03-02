@@ -131,13 +131,10 @@ export default {
       listA: [],
       listB: [],
       models: [
-        // "llama2-chat",
+        "chatglm3-6b",
         "llama2-13b-chat",
-        // "chatglm2-6b",
-        // "mpt-7b",
-        // "baichuan-7b",
-        // "vicuna-13b",
-        "Mixtral"
+        "Mixtral",
+        "open-hermes",
       ],
       isLoading: 0,
       votePosition: 0,

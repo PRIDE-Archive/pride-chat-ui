@@ -21,11 +21,27 @@
             <div class="chat-content" v-for="(item, index) in list" :key="index">
               <div class="chat-prompt">{{ item.prompt }}</div>
               <div class="chat-complete">
-                {{ item.result }}
-                <div style="text-align: right" v-if="item.relevant">
-                  <span style="font-size: 10px; color: gray; margin-right: 2px">{{ (item.timems / 1000).toFixed(2)
-                  }}s</span>
-                  <a @click="onRelevant(item.relevant)" type="primary" ghost>relevant</a>
+                <div>{{ item.result }}</div>
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                  <div style="display: flex; align-items: center; justify-content: start; margin-top:4px;">
+                    <div :class="{ 'grayed-out': item.feedback }" style="cursor: pointer;"
+                      @click="!item.feedback && onQueryFeedback(item.prompt, item.answer, 'good', item.timems, index)">
+                      <img :src="good" style="width: 18px; height: 18px;" />
+                    </div>
+                    <div :class="{ 'grayed-out': item.feedback }" style="cursor: pointer;margin: 0 4px;"
+                      @click="!item.feedback && onQueryFeedback(item.prompt, item.answer, 'moderate', item.timems, index)">
+                      <img :src="balance" style="width: 18px; height: 18px;" />
+                    </div>
+                    <div :class="{ 'grayed-out': item.feedback }" style="cursor: pointer;"
+                      @click="!item.feedback && onQueryFeedback(item.prompt, item.answer, 'bad', item.timems, index)">
+                      <img :src="bad" style="width: 18px; height: 18px;" />
+                    </div>
+                  </div>
+                  <div v-if="item.relevant">
+                    <span style="font-size: 10px; color: gray; margin-right: 2px">{{ (item.timems / 1000).toFixed(2)
+                      }}s</span>
+                    <a @click="onRelevant(item.relevant)" type="primary" ghost>relevant</a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -88,26 +104,25 @@
 </template>
 
 <script>
-import { chat } from "@/api/api";
+import { chat, saveProjectsQueryFeedback } from "@/api/api";
 import navbar from "./Navbar.vue";
 
 export default {
   name: "chat",
   data() {
     return {
+      good: require("@/assets/good.png"),
+      bad: require("@/assets/bad.png"),
+      balance: require("@/assets/balance.png"),
       prompt: "",
       prePrompt: "",
       list: [],
       model: "llama2-13b-chat",
       models: [
-        // "llama2-chat",
+        "chatglm3-6b",
         "llama2-13b-chat",
-        // "chatglm2-6b",
-        // "GPT4ALL",
-        // "mpt-7b",
-        // "baichuan-7b",
-        // "vicuna-13b",
-        "Mixtral"
+        "Mixtral",
+        "open-hermes",
       ],
       isLoading: false,
       showOption: true,
@@ -124,6 +139,12 @@ export default {
   async mounted() { },
   beforeDestroy() { },
   methods: {
+    onQueryFeedback: function (prompt, result, feedback, timems, index) {
+      saveProjectsQueryFeedback(prompt, result, feedback, 'pride_projects_search', this.model, timems).then((res) => {
+        this.$Message.success("Feedback Success");
+        this.list[index].feedback = true;
+      })
+    },
     onModel: function (model) {
       console.log(model);
     },
@@ -138,6 +159,8 @@ export default {
           this.list.push(
             Object.assign(res.data, {
               prompt: this.prePrompt,
+              feedback: false,
+              answer: res.data.result,
               relevant: res.data["relevant-chunk"],
               timems: res.data["timems"],
             })
@@ -169,6 +192,8 @@ export default {
           this.list.push(
             Object.assign(res.data, {
               prompt: this.prompt,
+              feedback: false,
+              answer: res.data.result,
               relevant: res.data["relevant-chunk"],
               timems: res.data["timems"],
             })
@@ -195,4 +220,14 @@ export default {
 
 <style scoped>
 @import "@/assets/style.css";
+
+.grayed-out {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.grayed-out img {
+  filter: grayscale(100%);
+  pointer-events: none;
+}
 </style>
