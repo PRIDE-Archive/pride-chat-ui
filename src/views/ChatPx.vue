@@ -40,7 +40,7 @@
                   </div>
                   <div v-if="item.relevant">
                     <span style="font-size: 10px; color: gray; margin-right: 2px">{{ (item.timems / 1000).toFixed(2)
-                    }}s</span>
+                      }}s</span>
                     <a @click="onRelevant(item.relevant, index)" type="primary" ghost>give me more</a>
                   </div>
                 </div>
@@ -148,7 +148,7 @@ export default {
   beforeDestroy() { },
   methods: {
     onQueryFeedback: function (prompt, result, feedback, index) {
-      saveProjectsQueryFeedback(prompt, result, feedback,'pride_projects_search', this.model).then((res) => {
+      saveProjectsQueryFeedback(prompt, result, feedback, 'pride_projects_search', this.model).then((res) => {
         this.$Message.success("Feedback Success");
         this.list[index].feedback = true;
       })
@@ -253,14 +253,33 @@ export default {
             return;
           }
 
+          let recommended = relevant.split(",");
           let result = "";
-
-          res.data.forEach((element, index) => {
-            let content = `${index + 1}.&ensp;Accession: ${this.PXDIdentifiers(element.accession)}\n
-&ensp;&ensp;Title: ${element.title}
+          let seq = 1;
+          result += `## LLM Recommand:
+`;
+          res.data.forEach((element) => {
+            if (recommended.includes(element.accession)) {
+              let content = `${seq}.&ensp;${this.PXDIdentifiers(element.accession)}: ${element.title}
 
 `;
-            result += content;
+              seq++;
+              result += content;
+            }
+
+          });
+
+          result += `## Additional Datasets:
+`;
+          res.data.forEach((element) => {
+            if (!recommended.includes(element.accession)) {
+              let content = `${seq}.&ensp;${this.PXDIdentifiers(element.accession)}: ${element.title}
+
+`;
+              seq++;
+              result += content;
+            }
+
           });
 
           localStorage.setItem("markdown", (result));
@@ -268,6 +287,7 @@ export default {
 
         })
         .catch((e) => {
+          console.error(e);
           this.$Message.warning("query failed");
         })
         .finally(() => {
