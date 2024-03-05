@@ -1,12 +1,12 @@
 <template>
   <div>
     <navbar />
-    <div class="container" style="min-height: 100vh; padding-top: 32px">
+    <div class="container" style="min-height: 100vh; padding-top: 32px; padding-bottom: 80px;">
       <main class="content">
         <h1 style="margin-bottom: 16px;">Relevant Documents</h1>
         <div style="width: 100%; text-align: left; font-size: 16px;line-height: 32px;" v-html="content"></div>
       </main>
-      <footer style="
+      <!-- <footer style="
           display: flex;
           justify-content: center;
           margin: 16px;
@@ -21,7 +21,7 @@
           Gradio
           <img src="https://huggingface-projects-llama-2-7b-chat--8wxtt.hf.space/assets/logo-0a070fcf.svg" alt="logo"
             style="width: 12px" /></a>
-      </footer>
+      </footer> -->
     </div>
   </div>
 </template>

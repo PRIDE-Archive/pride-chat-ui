@@ -256,7 +256,7 @@ export default {
           let recommended = relevant.split(",");
           let result = "";
           let seq = 1;
-          result += `## LLM Recommand:
+          result += `## LLM Recommend:
 `;
           res.data.forEach((element) => {
             if (recommended.includes(element.accession)) {
