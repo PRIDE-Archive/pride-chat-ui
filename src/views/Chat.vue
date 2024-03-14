@@ -117,7 +117,7 @@ export default {
       prompt: "",
       prePrompt: "",
       list: [],
-      model: "llama2-13b-chat",
+      model: "Mixtral",
       models: [
         "chatglm3-6b",
         "llama2-13b-chat",

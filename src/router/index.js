@@ -15,6 +15,11 @@ const routes = [
     component: () => import("../views/Chat.vue"),
   },
   {
+    path: "/popup",
+    name: "popup",
+    component: () => import("../views/Popup.vue"),
+  },
+  {
     path: "/benchmark",
     name: "benchmark",
     component: () => import("../views/Benchmark.vue"),
