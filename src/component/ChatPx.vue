@@ -2,16 +2,12 @@
   <div>
     <div class="container">
       <main class="content">
-        <div style="margin: 0; display: flex; align-items: center; justify-content: end;">
-          <div style="margin-bottom: 10px;">
+        <div class="chat" style="flex: 1 1 350px;">
+          <div class="chat-label" style="border: none; padding: 0px;">
             <Select v-model="model" style="width:150px">
               <Option v-for="item in models" :value="item" :key="item">{{ item }}</Option>
             </Select>
           </div>
-        </div>
-
-        <div class="chat" style="flex: 1 1 350px;">
-          <div class="chat-label">chatbot</div>
           <div class="chat-contents">
             <div class="chat-content" v-for="(item, index) in list" :key="index">
               <div class="chat-prompt" v-if="item.prompt" v-html="item.prompt"></div>

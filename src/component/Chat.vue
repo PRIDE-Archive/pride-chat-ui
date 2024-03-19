@@ -2,16 +2,12 @@
   <div>
     <div class="container">
       <main class="content" style="overflow-y: hidden;">
-        <div style="margin: 0; display: flex; align-items: center; justify-content: end;">
-          <div style="margin-bottom: 10px;">
+        <div class="chat" style="flex: 1 1 350px; ">
+          <div class="chat-label" style="border: none; padding: 0px;">
             <Select v-model="model" style="width:150px">
               <Option v-for="item in models" :value="item" :key="item">{{ item }}</Option>
             </Select>
           </div>
-        </div>
-
-        <div class="chat" style="flex: 1 1 350px;">
-          <div class="chat-label">chatbot</div>
           <div class="chat-contents">
             <div class="chat-content" v-for="(item, index) in list" :key="index">
               <div class="chat-prompt" style="flex-wrap: wrap;">{{ item.prompt }}</div>
@@ -48,8 +44,12 @@
             <Input :border="false" :autosize="{ minRows: 1, maxRows: 2 }" v-model="prompt" type="textarea" :rows="1"
               placeholder="Type a message..." />
           </div>
-          <div v-if="isLoading" class="submit-btn-loading" style="width: 50px;"><Icon type="ios-send" size="30" /></div>
-          <div v-else class="submit-btn" @click="onSubmit" style="width: 50px;"><Icon type="ios-send" size="30" /></div>
+          <div v-if="isLoading" class="submit-btn-loading" style="width: 50px;">
+            <Icon type="ios-send" size="30" />
+          </div>
+          <div v-else class="submit-btn" @click="onSubmit" style="width: 50px;">
+            <Icon type="ios-send" size="30" />
+          </div>
         </div>
 
       </main>

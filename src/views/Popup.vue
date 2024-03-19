@@ -32,7 +32,7 @@ export default {
     async mounted() {
         console.log("mounted");
         const queryParameters = this.$route.query;
-        if(queryParameters.type == 'assistant' || queryParameters.type == 'search'){
+        if (queryParameters.type == 'assistant' || queryParameters.type == 'search') {
             this.type = queryParameters.type;
         }
 
@@ -51,5 +51,14 @@ export default {
 </script>
 
 <style scoped>
+
+ /deep/ .ivu-tabs-nav .ivu-tabs-tab-active{
+    color: #5BC0BE !important;
+}
+/deep/ .ivu-tabs-ink-bar{
+    background-color: #5BC0BE !important;
+}
+
+</style>
 
 </style>
