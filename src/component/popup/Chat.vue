@@ -73,10 +73,9 @@ export default {
       list: [],
       model: "Mixtral",
       models: [
-        "chatglm3-6b",
+        "llama2-chat",
         "llama2-13b-chat",
         "Mixtral",
-        "open-hermes",
       ],
       isLoading: false,
       showOption: true,
