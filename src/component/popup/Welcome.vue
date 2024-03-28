@@ -2,9 +2,9 @@
     <div>
         <div class="content">
             <img :src="prideLogo" style="width: 280px; height: auto;" alt="" />
-            <h1 style="margin-top: 32px;">Welcome to Pride</h1>
-            <div style="margin-top: 16px;">Search our Knowledge Base or start a chat. We're here to help you 24*7.</div>
-            <div style="margin-top: 16px; opacity: 0.68;">We could add some more description here...</div>
+            <h1 style="margin-top: 64px;">Welcome to Pride</h1>
+            <div style="margin-top: 32px;">Search our Knowledge Base or start a chat. We're here to help you 24*7.</div>
+            <!-- <div style="margin-top: 16px; opacity: 0.68;">We could add some more description here...</div> -->
         </div>
         <div>
             <div class="send-btn" @click="onSubmit">
@@ -54,6 +54,10 @@ export default {
 
 .send-btn {
     background-color: rgba(91, 192, 180, 1);
+    position: fixed;
+    bottom: 32px;
+    left: 20px;
+    right: 20px;
     color: white;
     margin: 20px ;
     display: flex;
@@ -61,7 +65,6 @@ export default {
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.3s ease;
-
     padding: 4px 16px;
 }
 

@@ -28,7 +28,7 @@ export default {
     data() {
         return {
             type: 'assistant',
-            isWelcome: false,
+            isWelcome: true,
         };
     },
     components: {

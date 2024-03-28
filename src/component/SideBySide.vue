@@ -133,7 +133,7 @@ export default {
       listA: [],
       listB: [],
       models: [
-        "llama2-chat",
+        // "llama2-chat",
         "llama2-13b-chat",
         "Mixtral",
       ],

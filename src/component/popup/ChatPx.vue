@@ -70,7 +70,7 @@ export default {
       list: [],
       model: "Mixtral",
       models: [
-        "llama2-chat",
+        // "llama2-chat",
         "llama2-13b-chat",
         "Mixtral",
         // "chatglm3-6b",

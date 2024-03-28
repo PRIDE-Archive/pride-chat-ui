@@ -77,7 +77,7 @@
             margin-top: 8px;
             color: gray;
             text-align: left;
-            font-size: 12px;
+            font-size: 16px;
           ">
           Disclaimer: This chatbot is designed to assist you with general
           information and basic inquiries. Please note that it is not a
@@ -119,7 +119,7 @@ export default {
       list: [],
       model: "Mixtral",
       models: [
-        "llama2-chat",
+        // "llama2-chat",
         "llama2-13b-chat",
         "Mixtral",
       ],
