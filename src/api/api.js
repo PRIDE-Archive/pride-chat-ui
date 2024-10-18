@@ -35,7 +35,7 @@ export const similarProjects = (data) => {
 };
 
 export const saveBenchmark = (data) => {
-  return post("/saveBenchmark", { Benchmark: data });
+  return post("/saveBenchmark", data );
 };
 
 export const getBenchmark = (page_num = 0, items_per_page = 100) => {

@@ -15,7 +15,7 @@
               <Icon type="ios-chatboxes-outline" /> Model A
             </div>
             <div class="chat-contents">
-              <div class="chat-content" v-for="(item, index) in listA" :key="index">
+              <div class="chat-content" v-for="(item, index) in list" :key="index">
                 <div class="chat-query">{{ item.query }}</div>
                 <div class="chat-complete">
                   {{ item.result }}
@@ -54,7 +54,7 @@
 <!--            ModelB:{{ record.model_b }}-->
 <!--          </div>-->
         </div>
-        <div class="votes" v-if="listA.length > 0">
+        <div class="votes" v-if="list.length > 0">
           <button class="vote-btn" @click="onVote('Good')">
             👈 Answer is better
           </button>
@@ -65,7 +65,7 @@
             🤝 Answer is ok
           </button>
         </div>
-<!--        <div class="votes" style="opacity: 0.5" v-if="listA.length > 0 && listA.length == votePosition">-->
+<!--        <div class="votes" style="opacity: 0.5" v-if="list.length > 0 && list.length == votePosition">-->
 <!--          <button class="vote-btn">-->
 <!--            👈 A is better-->
 <!--          </button>-->
@@ -126,14 +126,14 @@ export default {
       query: "",
       prequery: "",
 
-      listA: [],
+      list: [],
       models: [
         "Llama-3.2-3B-Instruct"
       ],
       isLoading: 0,
       votePosition: 0,
       record: {
-        "model": "",
+        "model": "Llama-3.2-3B-Instruct",
        // "model_b": "",
        // "winner": "",
         "judge": "",
@@ -174,25 +174,42 @@ export default {
         return;
       }
       this.$Spin.show();
-      chat(this.prequery,this.listA)
-        .then((res) => {
-          this.listA.push(
-            Object.assign(res.data, {
-              query: this.prequery,
-              relevant: res.data["relevant-chunk"],
-            })
-          );
-        })
-        .catch((e) => {
-          this.$Message.warning("chat failed");
-        })
-        .finally(() => {
-          this.$Spin.hide();
-        });
+      // Create a new item with a result property
+      const newItem = {result: "", query: this.prequery};
+      this.list.push(newItem); // Add the new item to the list
+      this.isLoading = true; // Show loading indicator
+
+      await chat(this.query, newItem, (result) => {
+        this.$Spin.hide();
+        this.$set(newItem, 'result', result); // Use $set for reactivity
+      }).then((finalResult) => {
+        if (finalResult) {
+          newItem.query = this.query, // Keep the query associated with the result
+              newItem.answer = finalResult.result; // Save the answer in the new item
+          newItem.relevant = finalResult.relevant; // Relevance information
+          newItem.time_ms = finalResult.time_ms; // Time in milliseconds
+
+          this.record.question = this.query;
+          this.record.answer = finalResult.result;
+          this.record.time = finalResult.time_ms;
+        }
+
+      }).catch (e => {
+        console.error(e);
+        if (!e.response) {
+          this.$Message.error({ content: "response is empty", duration: 20, closable: true });
+        } else {
+          this.$Message.error(e.message + " " + e.code);
+          this.$Message.error({ content: e.message + " " + e.code, duration: 20, closable: true });
+        }
+      }).finally ( () => {
+        this.$Spin.hide();
+        this.isLoading = false;
+      });
     },
     onClear: function () {
       console.log('clear');
-      this.listA = [];
+      this.list = [];
       //this.listB = [];
       this.votePosition = 0;
       this.query = '';
@@ -202,34 +219,27 @@ export default {
     doSubmit: async function () {
 
       this.$Spin.show();
+      // Create a new item with a result property
+      const newItem = {result: "", query: this.query};
+      this.list.push(newItem); // Add the new item to the list
+      this.isLoading = true; // Show loading indicator
 
-      try {
+      await chat(this.query, newItem, (result) => {
+        this.$Spin.hide();
+        this.$set(newItem, 'result', result); // Use $set for reactivity
+      }).then((finalResult) => {
+        if (finalResult) {
+          newItem.query = this.query, // Keep the query associated with the result
+              newItem.answer = finalResult.result; // Save the answer in the new item
+          newItem.relevant = finalResult.relevant; // Relevance information
+          newItem.time_ms = finalResult.time_ms; // Time in milliseconds
 
-        let resA = await chat(this.query,this);
-        //let resB = await chat(this.query, this.record.model_b);
+          this.record.question = this.query;
+          this.record.answer = finalResult.result;
+          this.record.time = finalResult.time_ms;
+        }
 
-        this.listA.push(
-          Object.assign(resA.data, {
-            query: this.query,
-            relevant: resA.data["relevant-chunk"],
-            time_ms: resA.data["time_ms"]
-          })
-        );
-        // this.listB.push(
-        //   Object.assign(resB.data, {
-        //     query: this.query,
-        //     relevant: resB.data["relevant-chunk"],
-        //     time_ms: resB.data["time_ms"]
-        //   })
-        // );
-        // console.log(this.listB);
-        this.record.question = this.query;
-        this.record.answer = resA.data.result;
-        //this.record.model_b_answer = resB.data.result;
-        this.record.time = resA.data.time_ms;
-        //this.record.model_b_timing = resB.data.time_ms;
-
-      } catch (e) {
+      }).catch (e => {
         console.error(e);
         if (!e.response) {
           this.$Message.error({ content: "response is empty", duration: 20, closable: true });
@@ -237,14 +247,14 @@ export default {
           this.$Message.error(e.message + " " + e.code);
           this.$Message.error({ content: e.message + " " + e.code, duration: 20, closable: true });
         }
-      }
+      }).finally ( () => {
+        this.prequery = this.query;
+        this.query = "";
+        this.$Spin.hide();
+        this.isLoading = false;
+      });
 
-      this.prequery = this.query;
-      this.query = "";
 
-      // console.log(JSON.stringify(this.record));
-
-      this.$Spin.hide();
     },
     onSubmit: async function (name) {
       this.$refs[name].validate((valid) => {
@@ -290,9 +300,9 @@ export default {
     },
     onVote: function (feedback) {
       this.record.feedback = feedback;
-      this.record.turn = this.listA.length;
+      this.record.turn = this.list.length;
       this.record.tstamp = this.getCurrentData();
-      this.votePosition = this.listA.length;
+      this.votePosition = this.list.length;
       console.log(JSON.stringify(this.record));
       let voteData = JSON.parse(localStorage.getItem('voteData')) || [];
       voteData.push(this.record);
