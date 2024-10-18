@@ -1,6 +1,6 @@
 import axios from "axios";
 export const baseURL = "https://www.ebi.ac.uk/pride/ws/archive/v2";
-export const resourceURL = "http://codon-gpu-016.ebi.ac.uk:6008";
+export const resourceURL = "http://hh-rke-wp-webadmin-44-worker-5.caas.ebi.ac.uk:31434";
 const server = axios.create({
   baseURL: baseURL,
   timeout: 120000,
