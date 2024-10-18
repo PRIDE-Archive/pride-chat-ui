@@ -19,27 +19,27 @@
           <div class="chat-label">chatbot</div>
           <div class="chat-contents">
             <div class="chat-content" v-for="(item, index) in list" :key="index">
-              <div class="chat-prompt" v-if="item.prompt" v-html="item.prompt"></div>
+              <div class="chat-query" v-if="item.query" v-html="item.query"></div>
               <div class="chat-complete">
                 <div style="padding-left: 16px;" v-html="item.result"></div>
                 <!-- {{ item.result }} -->
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                   <div style="display: flex; align-items: center; justify-content: start; margin-top:4px;">
                     <div :class="{ 'grayed-out': item.feedback }" style="cursor: pointer;"
-                      @click="!item.feedback && onQueryFeedback(item.prompt, item.answer, 'good', index)">
+                      @click="!item.feedback && onQueryFeedback(item.query, item.answer, 'good', index,item.time_ms)">
                       <img :src="good" style="width: 18px; height: 18px;" />
                     </div>
                     <div :class="{ 'grayed-out': item.feedback }" style="cursor: pointer;margin: 0 4px;"
-                      @click="!item.feedback && onQueryFeedback(item.prompt, item.answer, 'moderate', index)">
+                      @click="!item.feedback && onQueryFeedback(item.query, item.answer, 'moderate', index,item.time_ms)">
                       <img :src="balance" style="width: 18px; height: 18px;" />
                     </div>
                     <div :class="{ 'grayed-out': item.feedback }" style="cursor: pointer;"
-                      @click="!item.feedback && onQueryFeedback(item.prompt, item.answer, 'bad', index)">
+                      @click="!item.feedback && onQueryFeedback(item.query, item.answer, 'bad', index,item.time_ms)">
                       <img :src="bad" style="width: 18px; height: 18px;" />
                     </div>
                   </div>
                   <div v-if="item.relevant">
-                    <span style="font-size: 10px; color: gray; margin-right: 2px">{{ (item.timems / 1000).toFixed(2)
+                    <span style="font-size: 10px; color: gray; margin-right: 2px">{{ (item.time_ms / 1000).toFixed(2)
                       }}s</span>
                     <a @click="onRelevant(item.relevant, index)" type="primary" ghost>give me more</a>
                   </div>
@@ -59,7 +59,7 @@
               flex-direction: row;
               align-items: center;
             ">
-            <Input :border="false" :autosize="{ minRows: 1, maxRows: 2 }" v-model="prompt" type="textarea" :rows="1"
+            <Input :border="false" :autosize="{ minRows: 1, maxRows: 2 }" v-model="query" type="textarea" :rows="1"
               placeholder="Type a message..." />
           </div>
           <div v-if="isLoading" class="submit-btn-loading">Submit</div>
@@ -117,14 +117,12 @@ export default {
       good: require("@/assets/good.png"),
       bad: require("@/assets/bad.png"),
       balance: require("@/assets/balance.png"),
-      prompt: "",
-      prePrompt: "",
+      query: "",
+      preQuery: "",
       list: [],
-      model: "Mixtral",
+      model: "Llama-3.2-3B-GGUF",
       models: [
-        // "llama2-chat",
-        "llama2-13b-chat",
-        "Mixtral",
+        "Llama-3.2-3B-GGUF",
       ],
       isLoading: false,
       showOption: true,
@@ -141,8 +139,8 @@ export default {
   async mounted() { },
   beforeDestroy() { },
   methods: {
-    onQueryFeedback: function (prompt, result, feedback, index) {
-      saveProjectsQueryFeedback(prompt, result, feedback, 'pride_projects_search', this.model).then((res) => {
+    onQueryFeedback: function (query, result, feedback, index, time_ms) {
+      saveProjectsQueryFeedback(query, result, feedback, time_ms).then((res) => {
         this.$Message.success("Feedback Success");
         this.list[index].feedback = true;
       })
@@ -161,29 +159,36 @@ export default {
     },
     onRetry: async function () {
       console.log("onRetry");
-      if (!this.prePrompt) {
+      if (!this.preQuery) {
         return;
       }
       this.$Spin.show();
-      chat(this.prePrompt)
-        .then((res) => {
+      // Create a new item with a result property
+      const newItem = {result: "", query: this.preQuery};
+      this.list.push(newItem); // Add the new item to the list
+      this.isLoading = true; // Show loading indicator
+
+
+      await chat(this.preQuery, newItem, (result) => {
+        this.$Spin.hide();
+        const mdIt = new MarkdownIt();
+        this.$set(newItem, 'result', mdIt.render(this.PXDIdentifiers(result))); // Use $set for reactivity
+      }).then((finalResult) => {
+        if (finalResult) {
           const mdIt = new MarkdownIt();
-          this.list.push(
-            Object.assign(res.data, {
-              prompt: this.prePrompt,
-              feedback: false,
-              answer: res.data.result,
-              result: mdIt.render(this.PXDIdentifiers(res.data.result)),
-              relevant: res.data["relevant-chunk"],
-              timems: res.data["timems"],
-            })
-          );
-        })
-        .catch((e) => {
-          this.$Message.warning("chat failed");
-        })
+          newItem.query = this.query, // Keep the query associated with the result
+              newItem.answer = finalResult.result; // Save the answer in the new item
+          newItem.result = mdIt.render(this.PXDIdentifiers(finalResult.result)),
+          newItem.relevant = finalResult.relevant; // Relevance information
+          newItem.time_ms = finalResult.time_ms; // Time in milliseconds
+        }
+      })
+          .catch((error) => {
+            console.error("Error during streaming:", error);
+          })
         .finally(() => {
           this.$Spin.hide();
+          this.isLoading = false;
         });
     },
     onClear: function () {
@@ -202,38 +207,39 @@ export default {
       // Please note that the datasets are related to brain cancer and not lung cancer, as you mentioned in your question. If you are looking for lung cancer datasets, you may want to search for other databases or resources.`
       //       console.log(this.PXDIdentifiers(result));
 
-      if (!this.prompt) {
-        return;
-      }
-      if (!this.model) {
-        this.$Message.warning("please choice model");
+      if (!this.query) {
         return;
       }
 
       this.$Spin.show();
 
-      chat(this.prompt, this.model)
-        .then((res) => {
-          const mdIt = new MarkdownIt();
-          this.list.push({
-            prompt: this.prompt,
-            feedback: false,
-            isMore: false,
-            answer: res.data.result,
-            result: mdIt.render(this.PXDIdentifiers(res.data.result)),
-            relevant: res.data["relevant-chunk"],
-            timems: res.data["timems"]
+      // Create a new item with a result property
+      const newItem = {result: "", query: this.query};
+      this.list.push(newItem); // Add the new item to the list
+      this.isLoading = true; // Show loading indicator
+      const mdIt = new MarkdownIt();
 
-          });
-          this.prePrompt = this.prompt;
-          this.prompt = "";
-          console.log(this.list);
-        })
-        .catch((e) => {
-          this.$Message.warning("chat failed");
-        })
+      await chat(this.query, newItem, (result) => {
+        this.$Spin.hide();
+        this.$set(newItem, 'result', mdIt.render(this.PXDIdentifiers(result))); // Use $set for reactivity
+      }).then((finalResult) => {
+        if (finalResult) {
+          newItem.query = this.query, // Keep the query associated with the result
+              newItem.answer = finalResult.result; // Save the answer in the new item
+          newItem.result = mdIt.render(this.PXDIdentifiers(finalResult.result)),
+              newItem.relevant = finalResult.relevant; // Relevance information
+          newItem.time_ms = finalResult.time_ms; // Time in milliseconds
+          newItem.isMore=false;
+          this.preQuery = this.query;
+          this.query = "";
+        }
+      })
+          .catch((error) => {
+            console.error("Error during streaming:", error);
+          })
         .finally(() => {
           this.$Spin.hide();
+          this.isLoading = false;
         });
     },
     onRelevant: function (relevant, index) {

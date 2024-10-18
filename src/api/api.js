@@ -1,4 +1,4 @@
-import { get, post, resourceURL } from "./request";
+import {get, post, resourceURL, chatStream,} from "./request";
 
 const buildData = (data) => {
   return new Promise((resolve, reject) => {
@@ -18,17 +18,17 @@ export const modelChoiceTest = (model) => {
   return buildData({ data: { result: "success" } });
 };
 
-export const chat = (prompt, modelName) => {
-  return post("/chat", { Chat: { prompt: prompt, model_name: modelName } });
+export const chat = async (query, item ,callBack) => {
+  return await chatStream("/chat", {query : query},item , callBack)
+}
+
+export const saveProjectsQueryFeedback = (query, result, feedback, source, model, time_ms) => {
+  return post("/saveQueryFeedback",{ query: query, answer: result, feedback: feedback, time_ms: time_ms  });
 };
 
-export const saveProjectsQueryFeedback = (prompt, result, feedback, source, model, time_ms) => {
-  return post("/saveQueryFeedback",{Feedback: { query: prompt, answer: result, feedback: feedback, source, model, time_ms  }});
-};
-
-export const chatPx = (prompt, modelName) => {
-  return post("/chat_px", { Chat: { prompt: prompt, model_name: modelName } });
-};
+export const chatPx = async (query, item ,callBack) => {
+  return await chatStream("/chat_px", {query : query},item , callBack)
+}
 
 export const similarProjects = (data) => {
   return get("/similarProjects",{accessions: data});
@@ -42,7 +42,7 @@ export const getBenchmark = (page_num = 0, items_per_page = 100) => {
   return get("/getBenchmark", { page_num, items_per_page });
 };
 
-export const chatTest = (prompt) => {
+export const chatTest = (query) => {
   return buildData({
     data: {
       result:

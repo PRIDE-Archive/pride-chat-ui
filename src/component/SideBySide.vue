@@ -21,11 +21,11 @@
               </div>
               <div class="chat-contents">
                 <div class="chat-content" v-for="(item, index) in listA" :key="index">
-                  <div class="chat-prompt">{{ item.prompt }}</div>
+                  <div class="chat-query">{{ item.query }}</div>
                   <div class="chat-complete">
                     {{ item.result }}
                     <div style="text-align: right" v-if="item.relevant">
-                      <span style="font-size: 10px; color: gray; margin-right: 2px;">{{ (item.timems/1000).toFixed(2) }}s</span>
+                      <span style="font-size: 10px; color: gray; margin-right: 2px;">{{ (item.time_ms/1000).toFixed(2) }}s</span>
                       <a @click="onRelevant(item.relevant)" type="primary" ghost>relevant</a>
                     </div>
                   </div>
@@ -43,11 +43,11 @@
               </div>
               <div class="chat-contents">
                 <div class="chat-content" v-for="(item, index) in listB" :key="index">
-                  <div class="chat-prompt">{{ item.prompt }}</div>
+                  <div class="chat-query">{{ item.query }}</div>
                   <div class="chat-complete">
                     {{ item.result }}
                     <div style="text-align: right" v-if="item.relevant">
-                      <span style="font-size: 10px; color: gray; margin-right: 2px;">{{ (item.timems/1000).toFixed(2) }}s</span>
+                      <span style="font-size: 10px; color: gray; margin-right: 2px;">{{ (item.time_ms/1000).toFixed(2) }}s</span>
                       <a @click="onRelevant(item.relevant)" type="primary" ghost>relevant</a>
                     </div>
                   </div>
@@ -95,7 +95,7 @@
                 flex-direction: row;
                 align-items: center;
               ">
-            <Input :border="false" :autosize="{ minRows: 1, maxRows: 2 }" v-model="prompt" type="textarea" :rows="1"
+            <Input :border="false" :autosize="{ minRows: 1, maxRows: 2 }" v-model="query" type="textarea" :rows="1"
               placeholder="Type a message..." />
           </div>
 
@@ -127,15 +127,15 @@ import { chat, saveBenchmark } from "@/api/api";
 export default {
   data() {
     return {
-      prompt: "",
-      prePrompt: "",
+      query: "",
+      prequery: "",
 
       listA: [],
       listB: [],
       models: [
         // "llama2-chat",
         "llama2-13b-chat",
-        "Mixtral",
+        "Llama-3.2-3B-GGUF",
       ],
       isLoading: 0,
       votePosition: 0,
@@ -180,15 +180,15 @@ export default {
     },
     onRetry: async function () {
       console.log("onRetry");
-      if (!this.prePrompt) {
+      if (!this.prequery) {
         return;
       }
       this.$Spin.show();
-      chat(this.prePrompt)
+      chat(this.prequery)
         .then((res) => {
           this.listA.push(
             Object.assign(res.data, {
-              prompt: this.prePrompt,
+              query: this.prequery,
               relevant: res.data["relevant-chunk"],
             })
           );
@@ -205,7 +205,7 @@ export default {
       this.listA = [];
       this.listB = [];
       this.votePosition = 0;
-      this.prompt = '';
+      this.query = '';
       this.generateModel();
     },
     doSubmit: async function () {
@@ -214,29 +214,29 @@ export default {
 
       try {
 
-        let resA = await chat(this.prompt, this.record.model_a);
-        let resB = await chat(this.prompt, this.record.model_b);
+        let resA = await chat(this.query, this.record.model_a);
+        let resB = await chat(this.query, this.record.model_b);
 
         this.listA.push(
           Object.assign(resA.data, {
-            prompt: this.prompt,
+            query: this.query,
             relevant: resA.data["relevant-chunk"],
-            timems: resA.data["timems"]
+            time_ms: resA.data["time_ms"]
           })
         );
         this.listB.push(
           Object.assign(resB.data, {
-            prompt: this.prompt,
+            query: this.query,
             relevant: resB.data["relevant-chunk"],
-            timems: resB.data["timems"]
+            time_ms: resB.data["time_ms"]
           })
         );
         // console.log(this.listB);
-        this.record.question = this.prompt;
+        this.record.question = this.query;
         this.record.model_a_answer = resA.data.result;
         this.record.model_b_answer = resB.data.result;
-        this.record.model_a_timing = resA.data.timems;
-        this.record.model_b_timing = resB.data.timems;
+        this.record.model_a_timing = resA.data.time_ms;
+        this.record.model_b_timing = resB.data.time_ms;
 
       } catch (e) {
         console.error(e);
@@ -248,8 +248,8 @@ export default {
         }
       }
 
-      this.prePrompt = this.prompt;
-      this.prompt = "";
+      this.prequery = this.query;
+      this.query = "";
 
       // console.log(JSON.stringify(this.record));
 
@@ -261,7 +261,7 @@ export default {
           // this.$Message.error('Fail!');
           return;
         }
-        if (!this.prompt) {
+        if (!this.query) {
           this.$Message.error("please type a message");
           return;
         }

@@ -19,26 +19,27 @@
           <div class="chat-label">chatbot</div>
           <div class="chat-contents">
             <div class="chat-content" v-for="(item, index) in list" :key="index">
-              <div class="chat-prompt">{{ item.prompt }}</div>
+              <div class="chat-query">{{ item.query }}</div>
               <div class="chat-complete">
                 <div>{{ item.result }}</div>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                   <div style="display: flex; align-items: center; justify-content: start; margin-top:4px;">
                     <div :class="{ 'grayed-out': item.feedback }" style="cursor: pointer;"
-                      @click="!item.feedback && onQueryFeedback(item.prompt, item.answer, 'good', item.timems, index)">
-                      <img :src="good" style="width: 18px; height: 18px;" />
+                         @click="!item.feedback && onQueryFeedback(item.query, item.answer, 'good', item.time_ms, index)">
+                      <img :src="good" style="width: 18px; height: 18px;"/>
                     </div>
                     <div :class="{ 'grayed-out': item.feedback }" style="cursor: pointer;margin: 0 4px;"
-                      @click="!item.feedback && onQueryFeedback(item.prompt, item.answer, 'moderate', item.timems, index)">
-                      <img :src="balance" style="width: 18px; height: 18px;" />
+                         @click="!item.feedback && onQueryFeedback(item.query, item.answer, 'moderate', item.time_ms, index)">
+                      <img :src="balance" style="width: 18px; height: 18px;"/>
                     </div>
                     <div :class="{ 'grayed-out': item.feedback }" style="cursor: pointer;"
-                      @click="!item.feedback && onQueryFeedback(item.prompt, item.answer, 'bad', item.timems, index)">
-                      <img :src="bad" style="width: 18px; height: 18px;" />
+                         @click="!item.feedback && onQueryFeedback(item.query, item.answer, 'bad', item.time_ms, index)">
+                      <img :src="bad" style="width: 18px; height: 18px;"/>
                     </div>
                   </div>
                   <div v-if="item.relevant">
-                    <span style="font-size: 10px; color: gray; margin-right: 2px">{{ (item.timems / 1000).toFixed(2)
+                    <span style="font-size: 10px; color: gray; margin-right: 2px">{{
+                        (item.time_ms / 1000).toFixed(2)
                       }}s</span>
                     <a @click="onRelevant(item.relevant)" type="primary" ghost>relevant</a>
                   </div>
@@ -57,19 +58,21 @@
               flex-direction: row;
               align-items: center;
             ">
-            <Input :border="false" :autosize="{ minRows: 1, maxRows: 2 }" v-model="prompt" type="textarea" :rows="1"
-              placeholder="Type a message..." />
+            <Input :border="false" :autosize="{ minRows: 1, maxRows: 2 }" v-model="query" type="textarea" :rows="1"
+                   placeholder="Type a message..."/>
           </div>
           <div v-if="isLoading" class="submit-btn-loading">Submit</div>
           <div v-else class="submit-btn" @click="onSubmit">Submit</div>
         </div>
         <div class="opterates">
           <button class="opt-btn" @click="onRetry()">
-            <Icon color="#2b85e4" size="20" type="md-sync" />Resend last
+            <Icon color="#2b85e4" size="20" type="md-sync"/>
+            Resend last
             question
           </button>
           <button class="opt-btn" @click="onClear">
-            <Icon color="#808695" size="20" type="ios-trash" />Clear
+            <Icon color="#808695" size="20" type="ios-trash"/>
+            Clear
           </button>
         </div>
         <div style="
@@ -104,7 +107,7 @@
 </template>
 
 <script>
-import { chat, saveProjectsQueryFeedback } from "@/api/api";
+import {chat, saveProjectsQueryFeedback} from "@/api/api";
 import navbar from "./Navbar.vue";
 
 export default {
@@ -114,14 +117,12 @@ export default {
       good: require("@/assets/good.png"),
       bad: require("@/assets/bad.png"),
       balance: require("@/assets/balance.png"),
-      prompt: "",
-      prePrompt: "",
+      query: "",
+      preQuery: "",
       list: [],
-      model: "Mixtral",
+      model: "Llama-3.2-3B-GGUF",
       models: [
-        // "llama2-chat",
-        "llama2-13b-chat",
-        "Mixtral",
+        "Llama-3.2-3B-GGUF",
       ],
       isLoading: false,
       showOption: true,
@@ -135,11 +136,13 @@ export default {
   components: {
     navbar,
   },
-  async mounted() { },
-  beforeDestroy() { },
+  async mounted() {
+  },
+  beforeDestroy() {
+  },
   methods: {
-    onQueryFeedback: function (prompt, result, feedback, timems, index) {
-      saveProjectsQueryFeedback(prompt, result, feedback, 'pride_projects_search', this.model, timems).then((res) => {
+    onQueryFeedback: function (query, result, feedback, time_ms, index) {
+      saveProjectsQueryFeedback(query, result, feedback, 'pride_projects_search', this.model, time_ms).then((res) => {
         this.$Message.success("Feedback Success");
         this.list[index].feedback = true;
       })
@@ -149,64 +152,74 @@ export default {
     },
     onRetry: async function () {
       console.log("onRetry");
-      if (!this.prePrompt) {
+      if (!this.preQuery) {
         return;
       }
       this.$Spin.show();
-      chat(this.prePrompt)
-        .then((res) => {
-          this.list.push(
-            Object.assign(res.data, {
-              prompt: this.prePrompt,
-              feedback: false,
-              answer: res.data.result,
-              relevant: res.data["relevant-chunk"],
-              timems: res.data["timems"],
-            })
-          );
-        })
-        .catch((e) => {
-          this.$Message.warning("chat failed");
-        })
-        .finally(() => {
-          this.$Spin.hide();
-        });
+      // Create a new item with a result property
+      const newItem = {result: "", query: this.preQuery};
+      this.list.push(newItem); // Add the new item to the list
+      this.isLoading = true; // Show loading indicator
+
+      await chat(this.preQuery, newItem, (result) => {
+        this.$Spin.hide();
+        this.$set(newItem, 'result', result); // Use $set for reactivity
+      }).then((finalResult) => {
+        if (finalResult) {
+          newItem.query = this.query, // Keep the query associated with the result
+              newItem.answer = finalResult.result; // Save the answer in the new item
+          newItem.relevant = finalResult.relevant; // Relevance information
+          newItem.time_ms = finalResult.time_ms; // Time in milliseconds
+        }
+      })
+          .catch((error) => {
+            console.error("Error during streaming:", error);
+          })
+          .finally(() => {
+            this.$Spin.hide();
+            this.isLoading = false;
+          });
     },
     onClear: function () {
       this.list = [];
     },
     onSubmit: async function () {
-      if (!this.prompt) {
+      if (!this.query) {
         return;
       }
-      if (!this.model) {
-        this.$Message.warning("please choice model");
-        return;
-      }
+      // if (!this.model) {
+      //   this.$Message.warning("please choice model");
+      //   return;
+      // }
 
       this.$Spin.show();
 
-      chat(this.prompt, this.model)
-        .then((res) => {
-          this.list.push(
-            Object.assign(res.data, {
-              prompt: this.prompt,
-              feedback: false,
-              answer: res.data.result,
-              relevant: res.data["relevant-chunk"],
-              timems: res.data["timems"],
-            })
-          );
-          this.prePrompt = this.prompt;
-          this.prompt = "";
-          console.log(this.list);
-        })
-        .catch((e) => {
-          this.$Message.warning("chat failed");
-        })
-        .finally(() => {
-          this.$Spin.hide();
-        });
+      // Create a new item with a result property
+      const newItem = {result: "", query: this.query};
+      this.list.push(newItem); // Add the new item to the list
+      this.isLoading = true; // Show loading indicator
+
+      await chat(this.query, newItem, (result) => {
+        this.$Spin.hide();
+        this.$set(newItem, 'result', result); // Use $set for reactivity
+      }).then((finalResult) => {
+        if (finalResult) {
+          newItem.query = this.query, // Keep the query associated with the result
+          newItem.answer = finalResult.result; // Save the answer in the new item
+          newItem.relevant = finalResult.relevant; // Relevance information
+          newItem.time_ms = finalResult.time_ms; // Time in milliseconds
+        }
+        this.preQuery = this.query;
+        this.query = "";
+      })
+          .catch((error) => {
+            console.error("Error during streaming:", error);
+          })
+          .finally(() => {
+            this.$Spin.hide();
+            this.query = "";
+            this.isLoading = false;
+          });
     },
     onRelevant: function (relevant) {
       console.log(relevant);
