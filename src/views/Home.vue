@@ -6,9 +6,9 @@
         <TabPane label="PRIDE Assistant" name="battle">
           <chat></chat>
         </TabPane>
-        <TabPane label="Dataset Search" name="chatPx">
-          <chat-px></chat-px>
-        </TabPane>
+<!--        <TabPane label="Dataset Search" name="chatPx">-->
+<!--          <chat-px></chat-px>-->
+<!--        </TabPane>-->
         <!-- <TabPane label="Chatbot Arena(side-by-side)" name="side"><side-by-side></side-by-side></TabPane> -->
         <Button @click="exportData" size="small" slot="extra">Export Data</Button>
         <Button style="margin-left:8px;" @click="clearData" size="small" slot="extra">Clear Data</Button>

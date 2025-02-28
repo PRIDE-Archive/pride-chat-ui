@@ -26,9 +26,9 @@
                 <TabPane label="PRIDE Assistant" name="assistant">
                     <chat></chat>
                 </TabPane>
-                <TabPane label="Dataset Search" name="search">
-                    <chat-px></chat-px>
-                </TabPane>
+<!--                <TabPane label="Dataset Search" name="search">-->
+<!--                    <chat-px></chat-px>-->
+<!--                </TabPane>-->
                 <!-- <TabPane label="Chatbot Arena(side-by-side)" name="side"><side-by-side></side-by-side></TabPane> -->
                 <!-- <Button @click="exportData" size="small" slot="extra">Export Data</Button> -->
             </Tabs>

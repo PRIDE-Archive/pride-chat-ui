@@ -71,11 +71,9 @@ export default {
       prompt: "",
       prePrompt: "",
       list: [],
-      model: "Mixtral",
+      model: "Gemini-1.5-pro",
       models: [
-        // "llama2-chat",
-        "llama2-13b-chat",
-        "Mixtral",
+        "Gemini"
       ],
       isLoading: false,
       showOption: true,
