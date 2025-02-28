@@ -29,7 +29,7 @@
                     </div>
                   </div>
                   <div v-if="item.relevant">
-                    <span style="font-size: 10px; color: gray; margin-right: 2px">{{ (item.timems / 1000).toFixed(2)
+                    <span style="font-size: 10px; color: gray; margin-right: 2px">{{ (item.timems).toFixed(2)
                       }}s</span>
                     <a @click="onRelevant(item.relevant)" type="primary" ghost>relevant</a>
                   </div>
@@ -118,7 +118,7 @@ export default {
               prompt: this.prompt,
               feedback: false,
               answer: res.data.result,
-              relevant: res.data["relevant-chunk"],
+              relevant: res.data["relevant_chunk"],
               timems: res.data["timems"],
             })
           );
